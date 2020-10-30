@@ -12,52 +12,52 @@ import java.lang.reflect.InvocationTargetException;
 
 public abstract class AbstractPacket
 {
-	@Getter
-	protected PacketContainer handle;
+    @Getter
+    protected PacketContainer handle;
 
-	protected AbstractPacket(PacketContainer handle, PacketType type)
-	{
-		Preconditions.checkNotNull(handle, "packet handle cannot be null");
-		Preconditions.checkArgument(Objects.equal(handle.getType(), type), handle.getHandle() + " is not a packet of type " + type);
+    protected AbstractPacket(PacketContainer handle, PacketType type)
+    {
+        Preconditions.checkNotNull(handle, "packet handle cannot be null");
+        Preconditions.checkArgument(Objects.equal(handle.getType(), type), handle.getHandle() + " is not a packet of type " + type);
 
-		this.handle = handle;
-	}
+        this.handle = handle;
+    }
 
-	public void sendPacket(Iterable<Player> recipients)
-	{
-		for (Player receiver : recipients)
-		{
-			try {
-				ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException("Cannot send packet", e);
-			}
-		}
-	}
+    public void sendPacket(Iterable<Player> recipients)
+    {
+        for (Player receiver : recipients)
+        {
+            try {
+                ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException("Cannot send packet", e);
+            }
+        }
+    }
 
-	public void sendPacket(Player... recipients)
-	{
-		for (Player receiver : recipients)
-		{
-			try {
-				ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException("Cannot send packet", e);
-			}
-		}
-	}
+    public void sendPacket(Player... recipients)
+    {
+        for (Player receiver : recipients)
+        {
+            try {
+                ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException("Cannot send packet", e);
+            }
+        }
+    }
 
-	public void broadcastPacket()
-	{
-		ProtocolLibrary.getProtocolManager().broadcastServerPacket(getHandle());
-	}
+    public void broadcastPacket()
+    {
+        ProtocolLibrary.getProtocolManager().broadcastServerPacket(getHandle());
+    }
 
-	public void receivePacket(Player sender)
-	{
-		try {
-			ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, this.handle);
-		} catch (Exception e) {
-			throw new RuntimeException("Cannot receive packet: ", e);
-		}
-	}
+    public void receivePacket(Player sender)
+    {
+        try {
+            ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, this.handle);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot receive packet: ", e);
+        }
+    }
 }
