@@ -8,8 +8,6 @@
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/85325)](https://www.spigotmc.org/resources/xglow.85325/) 
 [![Spiget Rating](https://img.shields.io/spiget/rating/85325)](https://www.spigotmc.org/resources/xglow.85325/) 
 
-> **Can also work on older spigot versions**
-
 XGlow is a simple API to create glow on your entities. Its also supports animation for glow out of the box.
 
 #### Important! This API depends on [ProtocolLib](https://github.com/dmulloy2/ProtocolLib)
