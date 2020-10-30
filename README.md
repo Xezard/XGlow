@@ -5,6 +5,8 @@
 [![GitHub](https://img.shields.io/github/license/Xezard/XGlow)](https://github.com/Xezard/XGlow/blob/master/LICENSE) 
 [![Jitpack](https://jitpack.io/v/Xezard/XGlow.svg)](https://jitpack.io/#Xezard/XGlow) 
 ![Lines of code](https://img.shields.io/tokei/lines/github/Xezard/XGlow?label=lines%20of%20code) 
+[![Spiget Downloads](https://img.shields.io/spiget/downloads/85325)](https://www.spigotmc.org/resources/xglow.85325/) 
+[![Spiget Rating](https://img.shields.io/spiget/rating/85325)](https://www.spigotmc.org/resources/xglow.85325/) 
 
 > **Can also work on older spigot versions**
 
