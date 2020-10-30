@@ -28,18 +28,6 @@ extends AbstractPacket
 		super(packet, TYPE);
 	}
 
-	public static class Mode extends IntEnum
-	{
-		public static final int TEAM_CREATED = 0,
-				                TEAM_REMOVED = 1,
-				                TEAM_UPDATED = 2,
-				                PLAYERS_ADDED = 3,
-				                PLAYERS_REMOVED = 4;
-
-		@Getter
-		private static final Mode INSTANCE = new Mode();
-	}
-
 	public String getName()
 	{
 		return this.handle.getStrings().read(0);
@@ -160,5 +148,17 @@ extends AbstractPacket
 	public void setPackOptionData(int value)
 	{
 		this.handle.getIntegers().write(1, value);
+	}
+
+	public static class Mode extends IntEnum
+	{
+		public static final int TEAM_CREATED = 0,
+				                TEAM_REMOVED = 1,
+				                TEAM_UPDATED = 2,
+				                PLAYERS_ADDED = 3,
+				                PLAYERS_REMOVED = 4;
+
+		@Getter
+		private static final Mode INSTANCE = new Mode();
 	}
 }
