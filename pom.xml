@@ -10,7 +10,7 @@
     <build>
         <defaultGoal>clean package install</defaultGoal>
 
-        <finalName>XGlow_v${project.version}</finalName>
+        <finalName>XGlow-v${project.version}</finalName>
 
         <plugins>
             <plugin>
