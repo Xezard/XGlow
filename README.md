@@ -12,6 +12,9 @@ XGlow is a simple API to create glow on your entities. Its also supports animati
 
 #### Important! This API depends on [ProtocolLib](https://github.com/dmulloy2/ProtocolLib)
 
+## Image 
+![](https://sun9-64.userapi.com/vWr4kZTiCMx22g2jJ7xQJtnRYaSxI-tNqhYWoQ/wtxGp_Wi_V4.jpg)
+
 ## Bugs and Feedback
 
 For bugs, questions and discussions please use the [Github Issues](https://github.com/Xezard/XGlow/issues).
