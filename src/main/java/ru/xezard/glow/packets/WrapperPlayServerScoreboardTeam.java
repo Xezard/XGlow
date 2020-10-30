@@ -32,9 +32,9 @@ extends AbstractPacket
 	{
 		public static final int TEAM_CREATED = 0,
 				                TEAM_REMOVED = 1,
-		                        TEAM_UPDATED = 2,
-		                        PLAYERS_ADDED = 3,
-		                        PLAYERS_REMOVED = 4;
+				                TEAM_UPDATED = 2,
+				                PLAYERS_ADDED = 3,
+				                PLAYERS_REMOVED = 4;
 
 		@Getter
 		private static final Mode INSTANCE = new Mode();
@@ -103,13 +103,13 @@ extends AbstractPacket
 	public ChatColor getColor()
 	{
 		return this.handle.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-				          .read(0);
+				.read(0);
 	}
 
 	public void setColor(ChatColor value)
 	{
 		this.handle.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-				   .write(0, value);
+				.write(0, value);
 	}
 
 	public String getCollisionRule()
@@ -126,13 +126,13 @@ extends AbstractPacket
 	public List<String> getPlayers()
 	{
 		return (List<String>) this.handle.getSpecificModifier(Collection.class)
-				                         .read(0);
+				.read(0);
 	}
 
 	public void setPlayers(List<String> value)
 	{
 		this.handle.getSpecificModifier(Collection.class)
-				   .write(0, value);
+				.write(0, value);
 	}
 
 	/**
