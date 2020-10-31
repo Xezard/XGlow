@@ -47,12 +47,19 @@ implements IGlow
     @Getter
     protected String name;
 
-    public AbstractGlow(IAnimation<ChatColor> animatedDisplayNameColor, Plugin plugin, long updatePeriod, String name, boolean async)
+    public AbstractGlow(IAnimation<ChatColor> animatedColor, Plugin plugin, long updatePeriod, String name, boolean async)
     {
         super(plugin, updatePeriod, async);
 
-        this.animatedColor = animatedDisplayNameColor;
+        this.animatedColor = animatedColor;
         this.name = name;
+
+        GlowsManager.getInstance().addGlow(this);
+    }
+
+    public AbstractGlow(ChatColor color, String name)
+    {
+        this.animatedColor = new Animation<> (color);
 
         this.name = name;
 

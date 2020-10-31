@@ -46,6 +46,11 @@ extends AbstractGlow
         super(animatedColor, plugin, updatePeriod, name, async);
     }
 
+    public Glow(ChatColor color, String name)
+    {
+        super(color, name);
+    }
+
     private List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean glow)
     {
         return entities.stream()
@@ -290,7 +295,7 @@ extends AbstractGlow
         {
             if (this.animatedColor.isAnimated() && this.plugin == null)
             {
-                return null;
+                return new Glow(this.animatedColor.next(), this.name);
             }
 
             return new Glow
