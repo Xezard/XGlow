@@ -107,41 +107,27 @@ extends AbstractGlow
     @Override
     public void addHolders(Entity... entities)
     {
-        List<AbstractPacket> packets = new ArrayList<> ();
-
-        for (Entity entity : entities)
-        {
-            if (!this.holders.add(entity))
-            {
-                continue;
-            }
-
-            packets.add(this.createGlowPacket(entity, true));
-        }
-
-        if (packets.isEmpty())
-        {
-            return;
-        }
-
-        packets.add(this.createTeamPacket(PLAYERS_ADDED));
-
-        packets.forEach((packet) -> packet.sendPacket(this.viewers));
+        this.processHolder(true, entities);
     }
 
     @Override
     public void removeHolders(Entity... entities)
     {
+        this.processHolder(false, entities);
+    }
+
+    private void processHolder(boolean add, Entity... entities)
+    {
         List<AbstractPacket> packets = new ArrayList<> ();
 
         for (Entity entity : entities)
         {
-            if (!this.holders.remove(entity))
+            if (add ? !this.holders.add(entity) : !this.holders.remove(entity))
             {
                 continue;
             }
 
-            packets.add(this.createGlowPacket(entity, false));
+            packets.add(this.createGlowPacket(entity, add));
         }
 
         if (packets.isEmpty())
@@ -149,7 +135,7 @@ extends AbstractGlow
             return;
         }
 
-        packets.add(this.createTeamPacket(PLAYERS_REMOVED));
+        packets.add(this.createTeamPacket(add ? PLAYERS_ADDED : PLAYERS_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(this.viewers));
     }
@@ -159,66 +145,76 @@ extends AbstractGlow
     {
         List<AbstractPacket> packets = this.createGlowPackets(this.holders, true);
 
-        packets.add(this.createTeamPacket(TEAM_UPDATED));
-
         for (Player viewer : viewers)
         {
-            if (!this.viewers.contains(viewer))
+            if (this.viewers.contains(viewer))
             {
-                this.render(viewer);
+                continue;
             }
 
-            packets.forEach((packet) -> packet.sendPacket(viewer));
+            this.render(viewer);
         }
+
+        packets.add(this.createTeamPacket(TEAM_UPDATED));
+
+        packets.forEach((packet) -> packet.sendPacket(viewers));
     }
 
     @Override
     public void hideFrom(Player... viewers)
     {
-        List<AbstractPacket> packets = this.createGlowPackets(this.holders, false);
+        this.processView(false, viewers);
+    }
 
-        packets.add(this.createTeamPacket(TEAM_REMOVED));
+    @Override
+    public void render(Player... viewers)
+    {
+        this.processView(true, viewers);
+    }
+
+    private void processView(boolean display, Player... viewers)
+    {
+        List<AbstractPacket> packets = this.createGlowPackets(this.holders, display);
 
         for (Player viewer : viewers)
         {
-            if (!this.viewers.contains(viewer))
+            if (display == this.viewers.contains(viewer))
             {
+                continue;
+            }
+
+            if (display)
+            {
+                this.viewers.add(viewer);
                 continue;
             }
 
             this.viewers.remove(viewer);
-
-            packets.forEach((packet) -> packet.sendPacket(viewer));
         }
 
-        if (this.viewers.size() < 1 && this.animated)
+        packets.add(this.createTeamPacket(display ? TEAM_CREATED : TEAM_REMOVED));
+
+        packets.forEach((packet) -> packet.sendPacket(viewers));
+
+        if (this.animatedColor.isAnimated())
         {
-            this.stopAnimation();
-        }
-    }
-
-    @Override
-    public void render(Player... players)
-    {
-        List<AbstractPacket> packets = this.createGlowPackets(this.holders, true);
-
-        packets.add(this.createTeamPacket(TEAM_CREATED));
-
-        for (Player player : players)
-        {
-            if (this.viewers.contains(player))
+            if (display)
             {
-                continue;
+                if (this.viewers.size() <= 0 || this.animated)
+                {
+                    return;
+                }
+
+                this.startAnimation();
+                return;
             }
 
-            packets.forEach((packet) -> packet.sendPacket(player));
+            if (this.viewers.size() > 0 || !this.animated)
+            {
+                return;
+            }
 
-            this.viewers.add(player);
-        }
-
-        if (this.viewers.size() > 0 && !this.animated)
-        {
-            this.startAnimation();
+            this.stopAnimation();
         }
     }
 
