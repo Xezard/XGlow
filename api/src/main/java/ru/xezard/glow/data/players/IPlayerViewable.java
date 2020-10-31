@@ -52,7 +52,7 @@ public interface IPlayerViewable
         {
             Player player = Bukkit.getPlayer(uuid);
 
-            if (player == null || player.isOnline())
+            if (player == null || !player.isOnline())
             {
                 continue;
             }
@@ -74,7 +74,7 @@ public interface IPlayerViewable
         {
             Player player = Bukkit.getPlayer(uuid);
 
-            if (player == null || player.isOnline())
+            if (player == null || !player.isOnline())
             {
                 continue;
             }
@@ -87,7 +87,7 @@ public interface IPlayerViewable
     {
         this.getViewers().forEach((viewer) ->
         {
-            if (viewer == null || viewer.isOnline())
+            if (viewer == null || !viewer.isOnline())
             {
                 return;
             }
