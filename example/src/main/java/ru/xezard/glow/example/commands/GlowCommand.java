@@ -49,6 +49,7 @@ implements CommandExecutor
     );
 
     private static final String TEST_ENTITY_SPAWNED_MESSAGE = "[XGlowExample] Test entity spawned!",
+                                TEST_ENTITY_ALREADY_SPAWNED_MESSAGE = "[XGlowExample] Test entity already spawned!",
                                 TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE = "[XGlowExample] Test entity was not spawned!",
                                 TEST_ENTITY_ALREADY_GLOWING_MESSAGE = "[XGlowExample] Test entity already glowing!",
                                 TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = "[XGlowExample] Test entity is not glowing for now.",
@@ -97,6 +98,12 @@ implements CommandExecutor
                 switch (arguments[0].toLowerCase())
                 {
                     case "spawn":
+                        if (this.entity != null)
+                        {
+                            player.sendMessage(TEST_ENTITY_ALREADY_SPAWNED_MESSAGE);
+                            return true;
+                        }
+
                         this.entity = player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
 
                         player.sendMessage(TEST_ENTITY_SPAWNED_MESSAGE);
