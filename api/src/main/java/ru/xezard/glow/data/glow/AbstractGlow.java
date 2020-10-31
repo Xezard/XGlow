@@ -69,12 +69,16 @@ implements IGlow
     public void setColor(IAnimation<ChatColor> animatedColor)
     {
         this.animatedColor = animatedColor;
+
+        this.broadcast();
     }
 
     @Override
     public void setColor(ChatColor color)
     {
-        this.animatedColor = new Animation<>(color);
+        this.animatedColor = new Animation<> (color);
+
+        this.broadcast();
     }
 
     @Override
