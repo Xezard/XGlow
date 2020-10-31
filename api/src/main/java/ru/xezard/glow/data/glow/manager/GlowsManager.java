@@ -18,9 +18,9 @@
  */
 package ru.xezard.glow.data.glow.manager;
 
+import ru.xezard.glow.data.glow.IGlow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import ru.xezard.glow.data.glow.IGlow;
 
 import java.util.ArrayList;
 import java.util.List;

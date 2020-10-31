@@ -16,23 +16,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package ru.xezard.glow.listeners;
+package ru.xezard.glow.example;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-import ru.xezard.glow.data.glow.manager.GlowsManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import ru.xezard.glow.example.commands.GlowCommand;
 
-public class PlayerQuitListener
-implements Listener
+public class GlowExamplePlugin
+extends JavaPlugin
 {
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event)
+    @Override
+    public void onEnable()
     {
-        Player player = event.getPlayer();
-
-        GlowsManager.getInstance().removeGlowFrom(player);
-        GlowsManager.getInstance().removeViewer(player);
+        this.getCommand("glow").setExecutor(new GlowCommand(this));
     }
 }

@@ -19,6 +19,8 @@
 package ru.xezard.glow.data.glow;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import ru.xezard.glow.packets.AbstractPacket;
+import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.bukkit.ChatColor;
@@ -28,16 +30,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ru.xezard.glow.data.animation.Animation;
 import ru.xezard.glow.data.animation.IAnimation;
-import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
-import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam.Mode.*;
 
 @EqualsAndHashCode(callSuper = false)
 public class Glow
@@ -80,7 +78,7 @@ extends AbstractGlow
         team.setName(this.name);
         team.setMode(mode);
 
-        if (mode == TEAM_REMOVED)
+        if (mode == WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED)
         {
             return team;
         }
@@ -135,7 +133,7 @@ extends AbstractGlow
             return;
         }
 
-        packets.add(this.createTeamPacket(add ? PLAYERS_ADDED : PLAYERS_REMOVED));
+        packets.add(this.createTeamPacket(add ? WrapperPlayServerScoreboardTeam.Mode.PLAYERS_ADDED : WrapperPlayServerScoreboardTeam.Mode.PLAYERS_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(this.viewers));
     }
@@ -155,7 +153,7 @@ extends AbstractGlow
             this.render(viewer);
         }
 
-        packets.add(this.createTeamPacket(TEAM_UPDATED));
+        packets.add(this.createTeamPacket(WrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED));
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
     }
@@ -192,7 +190,7 @@ extends AbstractGlow
             this.viewers.remove(viewer);
         }
 
-        packets.add(this.createTeamPacket(display ? TEAM_CREATED : TEAM_REMOVED));
+        packets.add(this.createTeamPacket(display ? WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED : WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
 

@@ -18,16 +18,16 @@
  */
 package ru.xezard.glow.data.glow;
 
+import ru.xezard.glow.data.animation.AbstractAnimatable;
+import ru.xezard.glow.data.animation.Animation;
+import ru.xezard.glow.data.animation.IAnimation;
+import ru.xezard.glow.data.glow.manager.GlowsManager;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import ru.xezard.glow.data.animation.AbstractAnimatable;
-import ru.xezard.glow.data.animation.Animation;
-import ru.xezard.glow.data.animation.IAnimation;
-import ru.xezard.glow.data.glow.manager.GlowsManager;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -74,7 +74,7 @@ implements IGlow
     @Override
     public void setColor(ChatColor color)
     {
-        this.animatedColor = new Animation<> (color);
+        this.animatedColor = new Animation<>(color);
     }
 
     @Override

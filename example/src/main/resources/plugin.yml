@@ -1,0 +1,11 @@
+name: XGlowExample
+main: ru.xezard.glow.example.GlowExamplePlugin
+author: Xezard
+website: xezard.ru
+version: 1.0.1
+depend: [XGlow]
+api-version: 1.16
+
+commands:
+  glow:
+    description: Main command
