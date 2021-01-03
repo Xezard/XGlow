@@ -33,6 +33,7 @@ import ru.xezard.glow.data.animation.IAnimation;
 import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -224,8 +225,8 @@ extends AbstractGlow
     @Override
     public void destroy()
     {
-        this.holders.forEach(this::removeHolders);
-        this.viewers.forEach(this::hideFrom);
+        new HashSet<> (this.holders).forEach(this::removeHolders);
+        new HashSet<> (this.viewers).forEach(this::hideFrom);
 
         this.holders.clear();
         this.viewers.clear();
