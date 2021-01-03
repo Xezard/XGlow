@@ -18,9 +18,15 @@
  */
 package ru.xezard.glow;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.*;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
 
@@ -31,6 +37,42 @@ extends JavaPlugin
     public void onEnable()
     {
         this.registerListeners();
+        this.registerPacketListener();
+    }
+
+    private void registerPacketListener()
+    {
+        ProtocolLibrary.getProtocolManager().addPacketListener
+        (
+                new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
+                {
+                    @Override
+                    public void onPacketReceiving(PacketEvent event)
+                    {
+                        if (event.getPacketType() != PacketType.Play.Server.ENTITY_METADATA)
+                        {
+                            return;
+                        }
+
+                        PacketContainer packet = event.getPacket();
+
+                        Entity entity = packet.getEntityModifier(event).read(0);
+
+                        GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) ->
+                        {
+                            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity);
+
+                            WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+
+                            dataWatcher.setObject(0, byteSerializer, (byte) (0x40));
+
+                            packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+
+                            event.setPacket(packet);
+                        });
+                    }
+                }
+        );
     }
 
     private void registerListeners()
