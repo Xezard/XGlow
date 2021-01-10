@@ -65,12 +65,19 @@ extends AbstractGlow
 
         entityMetadata.setEntityID(entity.getEntityId());
 
-        WrappedDataWatcher dataWatcher = new WrappedDataWatcher();
+        WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity);
 
         WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 
+        byte mask = dataWatcher.getByte(0);
+
+        if (glow)
+        {
+            mask |= 0x40;
+        }
+
         dataWatcher.setEntity(entity);
-        dataWatcher.setObject(0, byteSerializer, glow ? (byte) (0x40) : (byte) 0x00);
+        dataWatcher.setObject(0, byteSerializer, mask);
 
         entityMetadata.setMetadata(dataWatcher.getWatchableObjects());
 

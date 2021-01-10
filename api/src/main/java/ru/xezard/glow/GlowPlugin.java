@@ -24,6 +24,7 @@ import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
@@ -47,7 +48,7 @@ extends JavaPlugin
                 new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
                 {
                     @Override
-                    public void onPacketReceiving(PacketEvent event)
+                    public void onPacketSending(PacketEvent event)
                     {
                         if (event.getPacketType() != PacketType.Play.Server.ENTITY_METADATA)
                         {
@@ -60,11 +61,22 @@ extends JavaPlugin
 
                         GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) ->
                         {
+                            Player player = event.getPlayer();
+
+                            if (!glow.sees(player))
+                            {
+                                return;
+                            }
+
                             WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity);
 
                             WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 
-                            dataWatcher.setObject(0, byteSerializer, (byte) (0x40));
+                            byte mask = dataWatcher.getByte(0);
+
+                            mask |= 0x40;
+
+                            dataWatcher.setObject(0, byteSerializer, mask);
 
                             packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
 
