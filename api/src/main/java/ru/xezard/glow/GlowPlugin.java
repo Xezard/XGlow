@@ -41,6 +41,14 @@ extends JavaPlugin
         this.registerPacketListener();
     }
 
+    private void registerListeners()
+    {
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
+        pluginManager.registerEvents(new EntityDeathListener(), this);
+        pluginManager.registerEvents(new PlayerQuitListener(), this);
+    }
+
     private void registerPacketListener()
     {
         ProtocolLibrary.getProtocolManager().addPacketListener
@@ -50,11 +58,6 @@ extends JavaPlugin
                     @Override
                     public void onPacketSending(PacketEvent event)
                     {
-                        if (event.getPacketType() != PacketType.Play.Server.ENTITY_METADATA)
-                        {
-                            return;
-                        }
-
                         PacketContainer packet = event.getPacket();
 
                         Entity entity = packet.getEntityModifier(event).read(0);
@@ -68,7 +71,7 @@ extends JavaPlugin
                                 return;
                             }
 
-                            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity);
+                            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
 
                             WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 
@@ -78,6 +81,7 @@ extends JavaPlugin
 
                             dataWatcher.setObject(0, byteSerializer, mask);
 
+                            packet.getIntegers().write(0, entity.getEntityId());
                             packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
 
                             event.setPacket(packet);
@@ -85,13 +89,5 @@ extends JavaPlugin
                     }
                 }
         );
-    }
-
-    private void registerListeners()
-    {
-        PluginManager pluginManager = Bukkit.getPluginManager();
-
-        pluginManager.registerEvents(new EntityDeathListener(), this);
-        pluginManager.registerEvents(new PlayerQuitListener(), this);
     }
 }
