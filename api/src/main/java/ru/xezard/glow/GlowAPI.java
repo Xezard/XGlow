@@ -26,25 +26,34 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
+import java.util.logging.Logger;
 
-public class GlowPlugin
-extends JavaPlugin
+public class GlowAPI
 {
-    @Override
-    public void onEnable()
-    {
-        this.registerListeners();
-        this.registerPacketListener();
-    }
+    private static Logger logger = Logger.getLogger(GlowAPI.class.getName());
 
-    private void registerListeners()
+    public GlowAPI() 
     {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
+        if (pluginManager.getPlugin("ProtocolLib") == null)
+        {
+            logger.warning("[XGlow] No access to ProtocolLib! Is it installed?");
+            logger.warning("[XGlow] Plugin has been disabled!");
+
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        this.registerListeners(pluginManager);
+        this.registerPacketListener();
+    }
+
+    private void registerListeners(PluginManager pluginManager)
+    {
         pluginManager.registerEvents(new EntityDeathListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
     }
