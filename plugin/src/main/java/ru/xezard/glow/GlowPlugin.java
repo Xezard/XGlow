@@ -24,5 +24,5 @@ import ru.xezard.glow.GlowAPI;
 public class GlowPlugin
 extends JavaPlugin
 {
-    private GlowAPI glowApi = new GlowAPI();
+    private GlowAPI glowApi = new GlowAPI(this);
 }
