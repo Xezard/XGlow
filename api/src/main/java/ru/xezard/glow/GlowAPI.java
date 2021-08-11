@@ -22,6 +22,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,18 +34,16 @@ import java.util.logging.Logger;
 
 public class GlowAPI
 {
-    private static Logger logger = Logger.getLogger(GlowAPI.class.getName());
-
-    public GlowAPI() 
+    public GlowAPI(Plugin plugin) 
     {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         if (pluginManager.getPlugin("ProtocolLib") == null)
         {
-            logger.warning("[XGlow] No access to ProtocolLib! Is it installed?");
-            logger.warning("[XGlow] Plugin has been disabled!");
+            plugin.getLogger().warning("[XGlow] No access to ProtocolLib! Is it installed?");
+            plugin.getLogger().warning("[XGlow] Plugin has been disabled!");
 
-            pluginManager.disablePlugin(this);
+            pluginManager.disablePlugin(plugin);
             return;
         }
 
