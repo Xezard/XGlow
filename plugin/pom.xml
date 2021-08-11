@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>XGlowPlugin</artifactId>
+        <artifactId>XGlow</artifactId>
         <groupId>ru.xezard</groupId>
         <version>1.0.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>XGlow</artifactId>
+    <artifactId>XGlowPlugin</artifactId>
     <packaging>jar</packaging>
     <build>
         <defaultGoal>clean package install</defaultGoal>
