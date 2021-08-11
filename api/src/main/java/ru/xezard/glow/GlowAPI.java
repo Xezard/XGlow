@@ -34,8 +34,12 @@ import java.util.logging.Logger;
 
 public class GlowAPI
 {
+    private final Plugin plugin;
+
     public GlowAPI(Plugin plugin) 
     {
+        this.plugin = plugin;
+
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         if (pluginManager.getPlugin("ProtocolLib") == null)
@@ -61,7 +65,7 @@ public class GlowAPI
     {
         ProtocolLibrary.getProtocolManager().addPacketListener
         (
-                new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
+                new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
                 {
                     @Override
                     public void onPacketSending(PacketEvent event)
