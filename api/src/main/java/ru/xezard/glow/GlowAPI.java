@@ -57,8 +57,8 @@ public class GlowAPI
 
     private void registerListeners(PluginManager pluginManager)
     {
-        pluginManager.registerEvents(new EntityDeathListener(), this);
-        pluginManager.registerEvents(new PlayerQuitListener(), this);
+        pluginManager.registerEvents(new EntityDeathListener(), this.plugin);
+        pluginManager.registerEvents(new PlayerQuitListener(), this.plugin);
     }
 
     private void registerPacketListener()
