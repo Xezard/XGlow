@@ -15,7 +15,7 @@
     <build>
         <defaultGoal>clean package install</defaultGoal>
 
-        <finalName>XGlow-${project.version}</finalName>
+        <finalName>XGlowAPI-${project.version}</finalName>
 
         <plugins>
             <plugin>
