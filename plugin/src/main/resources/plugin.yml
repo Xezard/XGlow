@@ -4,4 +4,3 @@ author: Xezard
 website: xezard.ru
 version: 1.0.5
 depend: [ProtocolLib]
-api-version: 1.16

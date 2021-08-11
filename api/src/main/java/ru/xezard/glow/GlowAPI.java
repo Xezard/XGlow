@@ -22,38 +22,50 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
+import java.util.logging.Logger;
 
-public class GlowPlugin
-extends JavaPlugin
+public class GlowAPI
 {
-    @Override
-    public void onEnable()
+    private final Plugin plugin;
+
+    public GlowAPI(Plugin plugin) 
     {
-        this.registerListeners();
+        this.plugin = plugin;
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
+        if (pluginManager.getPlugin("ProtocolLib") == null)
+        {
+            plugin.getLogger().warning("[XGlow] No access to ProtocolLib! Is it installed?");
+            plugin.getLogger().warning("[XGlow] Plugin has been disabled!");
+
+            pluginManager.disablePlugin(plugin);
+            return;
+        }
+
+        this.registerListeners(pluginManager);
         this.registerPacketListener();
     }
 
-    private void registerListeners()
+    private void registerListeners(PluginManager pluginManager)
     {
-        PluginManager pluginManager = Bukkit.getPluginManager();
-
-        pluginManager.registerEvents(new EntityDeathListener(), this);
-        pluginManager.registerEvents(new PlayerQuitListener(), this);
+        pluginManager.registerEvents(new EntityDeathListener(), this.plugin);
+        pluginManager.registerEvents(new PlayerQuitListener(), this.plugin);
     }
 
     private void registerPacketListener()
     {
         ProtocolLibrary.getProtocolManager().addPacketListener
         (
-                new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
+                new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
                 {
                     @Override
                     public void onPacketSending(PacketEvent event)
