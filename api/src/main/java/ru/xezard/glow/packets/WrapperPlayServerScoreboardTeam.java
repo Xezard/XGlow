@@ -113,12 +113,12 @@ extends AbstractPacket
 
     public String getNameTagVisibility()
     {
-        return readParam(params -> params.getStrings().read(1), null);
+        return readParam(params -> params.getStrings().read(0), null);
     }
 
     public void setNameTagVisibility(String value)
     {
-        writeParam(params -> params.getStrings().write(1, value));
+        writeParam(params -> params.getStrings().write(0, value));
     }
 
     public ChatColor getColor()
@@ -137,12 +137,12 @@ extends AbstractPacket
 
     public String getCollisionRule()
     {
-        return readParam(params -> params.getStrings().read(2), null);
+        return readParam(params -> params.getStrings().read(1), null);
     }
 
     public void setCollisionRule(String value)
     {
-        writeParam(params -> params.getStrings().write(2, value));
+        writeParam(params -> params.getStrings().write(1, value));
     }
 
     @SuppressWarnings("unchecked")
@@ -177,12 +177,12 @@ extends AbstractPacket
      */
     public int getPackOptionData()
     {
-        return readParam(params -> params.getIntegers().read(1), 0);
+        return readParam(params -> params.getIntegers().read(0), 0);
     }
 
     public void setPackOptionData(int value)
     {
-        writeParam(params -> params.getIntegers().write(1, value));
+        writeParam(params -> params.getIntegers().write(0, value));
     }
 
     public static class Mode extends IntEnum
