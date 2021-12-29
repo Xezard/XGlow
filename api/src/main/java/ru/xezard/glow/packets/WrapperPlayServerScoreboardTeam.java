@@ -19,6 +19,7 @@
 package ru.xezard.glow.packets;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.InternalStructure;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.IntEnum;
 import com.comphenix.protocol.utility.MinecraftReflection;
@@ -28,6 +29,9 @@ import org.bukkit.ChatColor;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class WrapperPlayServerScoreboardTeam
 extends AbstractPacket
@@ -66,66 +70,79 @@ extends AbstractPacket
         this.handle.getIntegers().write(0, value);
     }
 
+    private <T> T readParam(Function<InternalStructure, T> reader, T defaultValue)
+    {
+        Optional<InternalStructure> optParams = this.handle.getOptionalStructures().read(0);
+        return optParams.isPresent() ? reader.apply(optParams.get()) : defaultValue;
+    }
+
+    private <T> void writeParam(Consumer<InternalStructure> writer)
+    {
+        this.handle.getOptionalStructures().read(0).ifPresent(writer);
+    }
+
     public WrappedChatComponent getDisplayName()
     {
-        return this.handle.getChatComponents().read(0);
+        return readParam(params -> params.getChatComponents().read(0), null);
     }
 
     public void setDisplayName(WrappedChatComponent value)
     {
-        this.handle.getChatComponents().write(0, value);
+        writeParam(params -> params.getChatComponents().write(0, value));
     }
 
     public WrappedChatComponent getPrefix()
     {
-        return this.handle.getChatComponents().read(1);
+        return readParam(params -> params.getChatComponents().read(1), null);
     }
 
     public void setPrefix(WrappedChatComponent value)
     {
-        this.handle.getChatComponents().write(1, value);
+        writeParam(params -> params.getChatComponents().write(1, value));
     }
 
     public WrappedChatComponent getSuffix()
     {
-        return this.handle.getChatComponents().read(2);
+        return readParam(params -> params.getChatComponents().read(2), null);
     }
 
     public void setSuffix(WrappedChatComponent value)
     {
-        this.handle.getChatComponents().write(2, value);
+        writeParam(params -> params.getChatComponents().write(2, value));
     }
 
     public String getNameTagVisibility()
     {
-        return this.handle.getStrings().read(1);
+        return readParam(params -> params.getStrings().read(1), null);
     }
 
     public void setNameTagVisibility(String value)
     {
-        this.handle.getStrings().write(1, value);
+        writeParam(params -> params.getStrings().write(1, value));
     }
 
     public ChatColor getColor()
     {
-        return this.handle.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .read(0);
+        return readParam(params -> params
+                .getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
+                .read(0), null);
     }
 
     public void setColor(ChatColor value)
     {
-        this.handle.getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .write(0, value);
+        writeParam(params -> params
+                .getEnumModifier(ChatColor.class, MinecraftReflection.getMinecraftClass("EnumChatFormat"))
+                .write(0, value));
     }
 
     public String getCollisionRule()
     {
-        return this.handle.getStrings().read(2);
+        return readParam(params -> params.getStrings().read(2), null);
     }
 
     public void setCollisionRule(String value)
     {
-        this.handle.getStrings().write(2, value);
+        writeParam(params -> params.getStrings().write(2, value));
     }
 
     @SuppressWarnings("unchecked")
@@ -160,12 +177,12 @@ extends AbstractPacket
      */
     public int getPackOptionData()
     {
-        return this.handle.getIntegers().read(1);
+        return readParam(params -> params.getIntegers().read(1), 0);
     }
 
     public void setPackOptionData(int value)
     {
-        this.handle.getIntegers().write(1, value);
+        writeParam(params -> params.getIntegers().write(1, value));
     }
 
     public static class Mode extends IntEnum
