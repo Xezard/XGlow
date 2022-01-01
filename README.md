@@ -8,6 +8,7 @@
 [![Spiget Downloads](https://img.shields.io/spiget/downloads/85325?label=downloads%20%5Bspigot%5D)](https://www.spigotmc.org/resources/xglow.85325/)
 [![Github Releases Downloads](https://img.shields.io/github/downloads/Xezard/XGlow/total?label=downloads%20%5Bgithub%20releases%5D)](https://github.com/Xezard/XGlow/releases)
 [![Spiget Rating](https://img.shields.io/spiget/rating/85325)](https://www.spigotmc.org/resources/xglow.85325/) 
+[![Discord chat](https://img.shields.io/discord/775493797702139914?color=blue&label=discord)](https://discord.gg/JZ9uZ5aXwf)
 
 XGlow is a simple API to create glow on your entities. Its also supports animation for glow out of the box.
 
