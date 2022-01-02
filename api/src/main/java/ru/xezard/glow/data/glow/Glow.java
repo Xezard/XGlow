@@ -18,6 +18,7 @@
  */
 package ru.xezard.glow.data.glow;
 
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
@@ -89,6 +90,7 @@ extends AbstractGlow
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
         team.setName(this.name);
+        team.setDisplayName(WrappedChatComponent.fromText(this.name));
         team.setMode(mode);
 
         if (mode == WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED)

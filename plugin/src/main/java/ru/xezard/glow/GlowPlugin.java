@@ -19,20 +19,12 @@
 package ru.xezard.glow;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import ru.xezard.glow.GlowAPI;
 
 public class GlowPlugin
 extends JavaPlugin
 {
-    private GlowAPI glowApi;
-
     @Override
     public void onEnable() {
-        this.glowApi = new GlowAPI(this);
-    }
-
-    @Override 
-    public void onDisable() {
-        this.glowApi = null;
+        new GlowAPI(this);
     }
 }
