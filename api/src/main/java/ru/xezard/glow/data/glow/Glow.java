@@ -66,7 +66,7 @@ extends AbstractGlow
 
         entityMetadata.setEntityID(entity.getEntityId());
 
-        WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity);
+        WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
 
         WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 
