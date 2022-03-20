@@ -48,33 +48,31 @@ implements CommandExecutor
             "> 'glow removeviewer [player name]' - add viewer for glow on a test entity"
     );
 
-    private static final String TEST_ENTITY_SPAWNED_MESSAGE = "[XGlowExample] Test entity spawned!",
-                                TEST_ENTITY_ALREADY_SPAWNED_MESSAGE = "[XGlowExample] Test entity already spawned!",
-                                TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE = "[XGlowExample] Test entity was not spawned!",
-                                TEST_ENTITY_ALREADY_GLOWING_MESSAGE = "[XGlowExample] Test entity already glowing!",
-                                TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = "[XGlowExample] Test entity is not glowing for now.",
-                                TEST_ENTITY_GLOWING_NOW_MESSAGE =
-                                        "[XGlowExample] The test entity is now glowing for all viewers of the glow object.",
-                                PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE =
-                                        "[XGlowExample] Player with name '{target_name}' not found.",
-                                PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE =
-                                        "[XGlowExample] Player with name '{target_name}' can now see test entity glow.",
-                                PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE =
-                                        "[XGlowExample] Player with name '{target_name}' no longer sees test entity glow.";
+    private static final String p = "[XGlowExample] ";
+    private static final String
+            TEST_ENTITY_SPAWNED_MESSAGE = p + "Test entity spawned!",
+            TEST_ENTITY_ALREADY_SPAWNED_MESSAGE = p + "Test entity already spawned!",
+            TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE = p + "Test entity was not spawned!",
+            TEST_ENTITY_ALREADY_GLOWING_MESSAGE = p + "Test entity already glowing!",
+            TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE = p + "Test entity is not glowing for now.",
+            TEST_ENTITY_GLOWING_NOW_MESSAGE = p + "The test entity is now glowing for all viewers of the glow object.",
+            TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = p + "The test entity is now not glowing for all viewers of the glow object.",
+            PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE = p + "Player with name '{target_name}' not found.",
+            PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE = p + "Player with name '{target_name}' can now see test entity glow.",
+            PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = p + "Player with name '{target_name}' no longer sees test entity glow.";
 
     private Entity entity;
 
-    private Glow glow;
+    private final Glow glow;
 
-    public GlowCommand(GlowExamplePlugin plugin)
-    {
+    public GlowCommand(GlowExamplePlugin plugin) {
         this.glow = Glow.builder()
-                        .plugin(plugin)
-                        .animatedColor(ChatColor.AQUA, ChatColor.GREEN, ChatColor.RED, ChatColor.YELLOW, ChatColor.LIGHT_PURPLE)
-                        .name("test")
-                        .updatePeriod(10L)
-                        .asyncAnimation(true)
-                        .build();
+                .plugin(plugin)
+                .animatedColor(ChatColor.AQUA, ChatColor.GREEN, ChatColor.RED, ChatColor.YELLOW, ChatColor.LIGHT_PURPLE)
+                .name("test")
+                .updatePeriod(10L)
+                .asyncAnimation(true)
+                .build();
     }
 
     @Override
@@ -136,13 +134,13 @@ implements CommandExecutor
 
                         if (!this.glow.hasHolder(this.entity))
                         {
-                            player.sendMessage(TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE);
+                            player.sendMessage(TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE);
                             return true;
                         }
 
                         this.glow.removeHolders(this.entity);
 
-                        player.sendMessage(TEST_ENTITY_GLOWING_NOW_MESSAGE);
+                        player.sendMessage(TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE);
                         return true;
                 }
 
@@ -157,7 +155,7 @@ implements CommandExecutor
 
                 if (!this.glow.hasHolder(this.entity))
                 {
-                    player.sendMessage(TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE);
+                    player.sendMessage(TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE);
                     return true;
                 }
 
