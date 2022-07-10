@@ -1,0 +1,51 @@
+name: Build
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Run maven build
+        run: mvn clean package
+      - name: Upload XGlowAPI
+        uses: actions/upload-artifact@v3
+        with:
+          name: XGlowAPI
+          path: api/target/*.jar
+      - name: Upload XGlowExample
+        uses: actions/upload-artifact@v3
+        with:
+          name: XGlowExample
+          path: example/target/*.jar
+      - name: Upload XGlow
+        uses: actions/upload-artifact@v3
+        with:
+          name: XGlow
+          path: plugin/target/XGlow.jar
+  release:
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build]
+    steps:
+      - name: Download artifact (XGlowExample)
+        uses: actions/download-artifact@v3
+        with:
+          name: XGlowExample
+          path: example
+      - name: Download artifact (XGlow)
+        uses: actions/download-artifact@v3
+        with:
+          name: XGlow
+          path: plugin
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: |
+            example/*.jar
+            plugin/*.jar
+          draft: true
