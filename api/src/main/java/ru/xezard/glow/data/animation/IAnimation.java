@@ -20,8 +20,7 @@ package ru.xezard.glow.data.animation;
 
 import java.util.List;
 
-public interface IAnimation<O>
-{
+public interface IAnimation<O> {
     List<O> getValues();
 
     O next();

@@ -20,83 +20,71 @@ package ru.xezard.glow.data.animation;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.time.Duration;
+
 @Getter
 @NoArgsConstructor
 public abstract class AbstractAnimatable
-implements IAnimatable
-{
+implements IAnimatable {
     private Plugin plugin;
 
     private BukkitTask animationTask;
 
-    // update period in ticks
-    protected long updatePeriod;
+    protected Duration updatePeriod;
 
     protected boolean async,
                       animated;
 
-    public AbstractAnimatable(Plugin plugin, long updatePeriod)
-    {
+    public AbstractAnimatable(Plugin plugin, Duration updatePeriod) {
         this(plugin, updatePeriod, false);
     }
 
-    public AbstractAnimatable(Plugin plugin, long updatePeriod, boolean async)
-    {
+    public AbstractAnimatable(Plugin plugin, Duration updatePeriod, boolean async) {
         this.plugin = plugin;
-
         this.updatePeriod = updatePeriod;
-
         this.async = async;
     }
 
-    public void startAnimation()
-    {
-        if (this.updatePeriod < 1)
-        {
+    public void startAnimation() {
+        if (this.updatePeriod.isZero() || this.updatePeriod.isNegative()) {
             return;
         }
 
         this.animated = true;
 
-        if (this.animationTask != null)
-        {
+        if (this.animationTask != null) {
             this.animationTask.cancel();
             this.animationTask = null;
         }
 
-        if (this.async)
-        {
-            this.animationTask = Bukkit.getScheduler().runTaskTimerAsynchronously
-            (
+        if (this.async) {
+            this.animationTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
                     this.plugin,
                     this::tick,
                     0L,
-                    this.updatePeriod
+                    this.updatePeriod.toMillis() / 50
             );
         } else {
-            this.animationTask = Bukkit.getScheduler().runTaskTimer
-            (
+            this.animationTask = Bukkit.getScheduler().runTaskTimer(
                     this.plugin,
                     this::tick,
                     0L,
-                    this.updatePeriod
+                    this.updatePeriod.toMillis() / 50
             );
         }
     }
 
-    public void stopAnimation()
-    {
-        if (this.animationTask == null)
-        {
+    public void stopAnimation() {
+        if (this.animationTask == null) {
             return;
         }
 
         this.animated = false;
-
         this.animationTask.cancel();
     }
 }

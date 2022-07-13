@@ -27,8 +27,7 @@ import ru.xezard.glow.data.players.IPlayerViewable;
 import java.util.Set;
 
 public interface IGlow
-extends IPlayerViewable
-{
+extends IPlayerViewable {
     Set<Entity> getHolders();
 
     ChatColor getColor();

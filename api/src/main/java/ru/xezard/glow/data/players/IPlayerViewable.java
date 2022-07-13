@@ -25,35 +25,28 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
-public interface IPlayerViewable
-{
+public interface IPlayerViewable {
     Set<Player> getViewers();
 
-    default boolean hasViewers()
-    {
+    default boolean hasViewers() {
         return !this.getViewers().isEmpty();
     }
 
-    default boolean sees(Player... possibleViewers)
-    {
+    default boolean sees(Player... possibleViewers) {
         return Arrays.stream(possibleViewers).anyMatch(this.getViewers()::contains);
     }
 
-    default void display(Iterable<? extends Player> viewers)
-    {
+    default void display(Iterable<? extends Player> viewers) {
         viewers.forEach(this::display);
     }
 
     void display(Player... viewers);
 
-    default void display(UUID... uuids)
-    {
-        for (UUID uuid : uuids)
-        {
+    default void display(UUID... uuids) {
+        for (UUID uuid : uuids) {
             Player player = Bukkit.getPlayer(uuid);
 
-            if (player == null || !player.isOnline())
-            {
+            if (player == null || !player.isOnline()) {
                 continue;
             }
 
@@ -61,21 +54,17 @@ public interface IPlayerViewable
         }
     }
 
-    default void hideFrom(Iterable<? extends Player> viewers)
-    {
+    default void hideFrom(Iterable<? extends Player> viewers) {
         viewers.forEach(this::hideFrom);
     }
 
     void hideFrom(Player... viewers);
 
-    default void hideFrom(UUID... uuids)
-    {
-        for (UUID uuid : uuids)
-        {
+    default void hideFrom(UUID... uuids) {
+        for (UUID uuid : uuids) {
             Player player = Bukkit.getPlayer(uuid);
 
-            if (player == null || !player.isOnline())
-            {
+            if (player == null || !player.isOnline()) {
                 continue;
             }
 
@@ -83,12 +72,9 @@ public interface IPlayerViewable
         }
     }
 
-    default void hideFromEveryone()
-    {
-        this.getViewers().forEach((viewer) ->
-        {
-            if (viewer == null || !viewer.isOnline())
-            {
+    default void hideFromEveryone() {
+        this.getViewers().forEach((viewer) -> {
+            if (viewer == null || !viewer.isOnline()) {
                 return;
             }
 

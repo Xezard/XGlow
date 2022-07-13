@@ -20,6 +20,8 @@ package ru.xezard.glow.data.glow;
 
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
 import lombok.EqualsAndHashCode;
@@ -33,6 +35,7 @@ import ru.xezard.glow.data.animation.Animation;
 import ru.xezard.glow.data.animation.IAnimation;
 import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,27 +44,23 @@ import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = false)
 public class Glow
-extends AbstractGlow
-{
-    public Glow(IAnimation<ChatColor> animatedColor, Plugin plugin, long updatePeriod, String name, boolean async)
-    {
+extends AbstractGlow {
+    public Glow(IAnimation<ChatColor> animatedColor, Plugin plugin,
+                Duration updatePeriod, String name, boolean async) {
         super(animatedColor, plugin, updatePeriod, name, async);
     }
 
-    public Glow(ChatColor color, String name)
-    {
+    public Glow(ChatColor color, String name) {
         super(color, name);
     }
 
-    private List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean glow)
-    {
+    private List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean glow) {
         return entities.stream()
                        .map((entity) -> this.createGlowPacket(entity, glow))
                        .collect(Collectors.toList());
     }
 
-    private AbstractPacket createGlowPacket(Entity entity, boolean glow)
-    {
+    private AbstractPacket createGlowPacket(Entity entity, boolean glow) {
         WrapperPlayServerEntityMetadata entityMetadata = new WrapperPlayServerEntityMetadata();
 
         entityMetadata.setEntityID(entity.getEntityId());
@@ -72,8 +71,7 @@ extends AbstractGlow
 
         byte mask = dataWatcher.getByte(0);
 
-        if (glow)
-        {
+        if (glow) {
             mask |= 0x40;
         }
 
@@ -85,26 +83,24 @@ extends AbstractGlow
         return entityMetadata;
     }
 
-    private AbstractPacket createTeamPacket(int mode)
-    {
+    private AbstractPacket createTeamPacket(int mode) {
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
-        team.setName(this.name);
+        team.setTeamName(this.name);
         team.setDisplayName(WrappedChatComponent.fromText(this.name));
         team.setMode(mode);
 
-        if (mode == WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED)
-        {
+        if (mode == WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED) {
             return team;
         }
 
         team.setColor(this.animatedColor.next());
         team.setNameTagVisibility("ALWAYS");
 
-        team.setPlayers
-        (
+        team.setPlayers(
                 this.holders.stream()
-                            .map((holder) -> holder instanceof OfflinePlayer ? holder.getName() : holder.getUniqueId().toString())
+                            .map((holder) -> holder instanceof OfflinePlayer ?
+                                    holder.getName() : holder.getUniqueId().toString())
                             .collect(Collectors.toList())
         );
 
@@ -112,56 +108,47 @@ extends AbstractGlow
     }
 
     @Override
-    public boolean hasHolder(Entity entity)
-    {
+    public boolean hasHolder(Entity entity) {
         return this.holders.contains(entity);
     }
 
     @Override
-    public void addHolders(Entity... entities)
-    {
+    public void addHolders(Entity... entities) {
         this.processHolder(true, entities);
     }
 
     @Override
-    public void removeHolders(Entity... entities)
-    {
+    public void removeHolders(Entity... entities) {
         this.processHolder(false, entities);
     }
 
-    private void processHolder(boolean add, Entity... entities)
-    {
+    private void processHolder(boolean add, Entity... entities) {
         List<AbstractPacket> packets = new ArrayList<> ();
 
-        for (Entity entity : entities)
-        {
-            if (add ? !this.holders.add(entity) : !this.holders.remove(entity))
-            {
+        for (Entity entity : entities) {
+            if (add ? !this.holders.add(entity) : !this.holders.remove(entity)) {
                 continue;
             }
 
             packets.add(this.createGlowPacket(entity, add));
         }
 
-        if (packets.isEmpty())
-        {
+        if (packets.isEmpty()) {
             return;
         }
 
-        packets.add(this.createTeamPacket(add ? WrapperPlayServerScoreboardTeam.Mode.PLAYERS_ADDED : WrapperPlayServerScoreboardTeam.Mode.PLAYERS_REMOVED));
+        packets.add(this.createTeamPacket(add ? WrapperPlayServerScoreboardTeam.Mode.PLAYERS_ADDED :
+                WrapperPlayServerScoreboardTeam.Mode.PLAYERS_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(this.viewers));
     }
 
     @Override
-    public void display(Player... viewers)
-    {
+    public void display(Player... viewers) {
         List<AbstractPacket> packets = this.createGlowPackets(this.holders, true);
 
-        for (Player viewer : viewers)
-        {
-            if (this.viewers.contains(viewer))
-            {
+        for (Player viewer : viewers) {
+            if (this.viewers.contains(viewer)) {
                 continue;
             }
 
@@ -174,30 +161,24 @@ extends AbstractGlow
     }
 
     @Override
-    public void hideFrom(Player... viewers)
-    {
+    public void hideFrom(Player... viewers) {
         this.processView(false, viewers);
     }
 
     @Override
-    public void render(Player... viewers)
-    {
+    public void render(Player... viewers) {
         this.processView(true, viewers);
     }
 
-    private void processView(boolean display, Player... viewers)
-    {
+    private void processView(boolean display, Player... viewers) {
         List<AbstractPacket> packets = this.createGlowPackets(this.holders, display);
 
-        for (Player viewer : viewers)
-        {
-            if (display == this.viewers.contains(viewer))
-            {
+        for (Player viewer : viewers) {
+            if (display == this.viewers.contains(viewer)) {
                 continue;
             }
 
-            if (display)
-            {
+            if (display) {
                 this.viewers.add(viewer);
                 continue;
             }
@@ -209,12 +190,9 @@ extends AbstractGlow
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
 
-        if (this.animatedColor.isAnimated())
-        {
-            if (display)
-            {
-                if (this.viewers.size() <= 0 || this.animated)
-                {
+        if (this.animatedColor.isAnimated()) {
+            if (display) {
+                if (this.viewers.size() <= 0 || this.animated) {
                     return;
                 }
 
@@ -222,8 +200,7 @@ extends AbstractGlow
                 return;
             }
 
-            if (this.viewers.size() > 0 || !this.animated)
-            {
+            if (this.viewers.size() > 0 || !this.animated) {
                 return;
             }
 
@@ -232,8 +209,7 @@ extends AbstractGlow
     }
 
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         new HashSet<> (this.holders).forEach(this::removeHolders);
         new HashSet<> (this.viewers).forEach(this::hideFrom);
 
@@ -241,75 +217,64 @@ extends AbstractGlow
         this.viewers.clear();
     }
 
-    public static GlowBuilder builder()
-    {
+    public static GlowBuilder builder() {
         return new GlowBuilder();
     }
 
     @NoArgsConstructor
-    public static class GlowBuilder
-    {
-        private IAnimation<ChatColor> animatedColor;
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class GlowBuilder {
+        IAnimation<ChatColor> animatedColor;
 
-        private Plugin plugin;
+        Plugin plugin;
 
-        private String name;
+        Duration updatePeriod;
 
-        private long updatePeriod;
+        String name;
 
-        private boolean asyncAnimation;
+        boolean asyncAnimation;
 
-        public GlowBuilder animatedColor(IAnimation<ChatColor> animatedColor)
-        {
+        public GlowBuilder animatedColor(IAnimation<ChatColor> animatedColor) {
             this.animatedColor = animatedColor;
             return this;
         }
 
-        public GlowBuilder animatedColor(List<ChatColor> animatedColor)
-        {
+        public GlowBuilder animatedColor(List<ChatColor> animatedColor) {
             this.animatedColor = new Animation<> (animatedColor);
             return this;
         }
 
-        public GlowBuilder animatedColor(ChatColor... displayNameColor)
-        {
+        public GlowBuilder animatedColor(ChatColor... displayNameColor) {
             this.animatedColor = new Animation<> (displayNameColor);
             return this;
         }
 
-        public GlowBuilder plugin(Plugin plugin)
-        {
+        public GlowBuilder plugin(Plugin plugin) {
             this.plugin = plugin;
             return this;
         }
 
-        public GlowBuilder updatePeriod(long updatePeriod)
-        {
+        public GlowBuilder updatePeriod(Duration updatePeriod) {
             this.updatePeriod = updatePeriod;
             return this;
         }
 
-        public GlowBuilder name(String name)
-        {
+        public GlowBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public GlowBuilder asyncAnimation(boolean asyncAnimation)
-        {
+        public GlowBuilder asyncAnimation(boolean asyncAnimation) {
             this.asyncAnimation = asyncAnimation;
             return this;
         }
 
-        public Glow build()
-        {
-            if (this.animatedColor.isAnimated() && this.plugin == null)
-            {
+        public Glow build() {
+            if (this.animatedColor.isAnimated() && this.plugin == null) {
                 return new Glow(this.animatedColor.next(), this.name);
             }
 
-            return new Glow
-            (
+            return new Glow(
                     this.animatedColor,
                     this.plugin,
                     this.updatePeriod,

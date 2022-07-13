@@ -18,15 +18,25 @@
  */
 package ru.xezard.glow.example;
 
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.xezard.glow.data.glow.Glow;
 import ru.xezard.glow.example.commands.GlowCommand;
 
+import java.time.Duration;
+
 public class GlowExamplePlugin
-extends JavaPlugin
-{
+extends JavaPlugin {
     @Override
-    public void onEnable()
-    {
-        this.getCommand("glow").setExecutor(new GlowCommand(this));
+    public void onEnable() {
+        this.getCommand("glow").setExecutor(new GlowCommand(
+                Glow.builder()
+                    .plugin(this)
+                    .animatedColor(ChatColor.AQUA, ChatColor.GREEN, ChatColor.RED, ChatColor.YELLOW, ChatColor.LIGHT_PURPLE)
+                    .name("test")
+                    .updatePeriod(Duration.ofMillis(50 * 10)) // 10 ticks
+                    .asyncAnimation(true)
+                    .build())
+        );
     }
 }

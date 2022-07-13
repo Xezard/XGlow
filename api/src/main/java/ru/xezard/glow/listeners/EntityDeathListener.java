@@ -26,15 +26,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 
 public class EntityDeathListener
-implements Listener
-{
+implements Listener {
     @EventHandler
-    public void onDeath(EntityDeathEvent event)
-    {
+    public void onDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
 
-        if (entity instanceof Player)
-        {
+        if (entity instanceof Player) {
             return;
         }
 

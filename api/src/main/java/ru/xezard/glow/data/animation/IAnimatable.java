@@ -20,8 +20,7 @@ package ru.xezard.glow.data.animation;
 
 import org.bukkit.scheduler.BukkitTask;
 
-public interface IAnimatable
-{
+public interface IAnimatable {
     BukkitTask getAnimationTask();
 
     boolean isAsync();

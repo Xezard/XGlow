@@ -18,6 +18,8 @@
  */
 package ru.xezard.glow.data.glow.manager;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import ru.xezard.glow.data.glow.IGlow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,21 +28,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public final class GlowsManager
-implements IGlowsManager
-{
-    private final List<IGlow> glows = new ArrayList<> ();
+implements IGlowsManager {
+    final List<IGlow> glows = new ArrayList<> ();
 
-    private static volatile GlowsManager instance;
+    static volatile GlowsManager instance;
 
-    public static GlowsManager getInstance()
-    {
-        if (instance == null)
-        {
-            synchronized (GlowsManager.class)
-            {
-                if (instance == null)
-                {
+    public static GlowsManager getInstance() {
+        if (instance == null) {
+            synchronized (GlowsManager.class) {
+                if (instance == null) {
                     instance = new GlowsManager();
                 }
             }
@@ -50,48 +48,41 @@ implements IGlowsManager
     }
 
     @Override
-    public Optional<IGlow> getGlowByEntity(Entity entity)
-    {
+    public Optional<IGlow> getGlowByEntity(Entity entity) {
         return this.glows.stream()
                          .filter((glow) -> glow.hasHolder(entity))
                          .findFirst();
     }
 
     @Override
-    public void addGlow(IGlow glow)
-    {
+    public void addGlow(IGlow glow) {
         this.glows.add(glow);
     }
 
     @Override
-    public void removeGlow(IGlow glow)
-    {
+    public void removeGlow(IGlow glow) {
         glow.destroy();
 
         this.glows.remove(glow);
     }
 
     @Override
-    public void removeGlowFrom(Entity entity)
-    {
+    public void removeGlowFrom(Entity entity) {
         this.glows.forEach((glow) -> glow.removeHolders(entity));
     }
 
     @Override
-    public void removeViewer(Player viewer)
-    {
+    public void removeViewer(Player viewer) {
         this.glows.forEach((glow) -> glow.hideFrom(viewer));
     }
 
     @Override
-    public void clear()
-    {
+    public void clear() {
         this.glows.forEach(this::removeGlow);
     }
 
     @Override
-    public List<IGlow> getGlows()
-    {
+    public List<IGlow> getGlows() {
         return new ArrayList<> (this.glows);
     }
 }

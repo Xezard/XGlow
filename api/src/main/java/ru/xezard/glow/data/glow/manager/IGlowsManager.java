@@ -25,8 +25,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Optional;
 
-public interface IGlowsManager
-{
+public interface IGlowsManager {
     List<IGlow> getGlows();
 
     Optional<IGlow> getGlowByEntity(Entity entity);

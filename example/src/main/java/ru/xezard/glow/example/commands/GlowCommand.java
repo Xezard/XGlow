@@ -18,6 +18,9 @@
  */
 package ru.xezard.glow.example.commands;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -32,11 +35,10 @@ import ru.xezard.glow.example.GlowExamplePlugin;
 import java.util.Arrays;
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GlowCommand
-implements CommandExecutor
-{
-    private static final List<String> HELP_MESSAGE = Arrays.asList
-    (
+implements CommandExecutor {
+    static List<String> HELP_MESSAGE = Arrays.asList(
             "--------------------- [XGlow] ----------------------",
             "'[]', '<>' - required and optional arguments",
             "",
@@ -48,56 +50,45 @@ implements CommandExecutor
             "> 'glow removeviewer [player name]' - add viewer for glow on a test entity"
     );
 
-    private static final String p = "[XGlowExample] ";
-    private static final String
-            TEST_ENTITY_SPAWNED_MESSAGE = p + "Test entity spawned!",
-            TEST_ENTITY_ALREADY_SPAWNED_MESSAGE = p + "Test entity already spawned!",
-            TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE = p + "Test entity was not spawned!",
-            TEST_ENTITY_ALREADY_GLOWING_MESSAGE = p + "Test entity already glowing!",
-            TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE = p + "Test entity is not glowing for now.",
-            TEST_ENTITY_GLOWING_NOW_MESSAGE = p + "The test entity is now glowing for all viewers of the glow object.",
-            TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = p + "The test entity is now not glowing for all viewers of the glow object.",
-            PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE = p + "Player with name '{target_name}' not found.",
-            PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE = p + "Player with name '{target_name}' can now see test entity glow.",
-            PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = p + "Player with name '{target_name}' no longer sees test entity glow.";
+    static String PREFIX = "[XGlowExample] ";
+    static String
+            TEST_ENTITY_SPAWNED_MESSAGE = PREFIX + "Test entity spawned!",
+            TEST_ENTITY_ALREADY_SPAWNED_MESSAGE = PREFIX + "Test entity already spawned!",
+            TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE = PREFIX + "Test entity was not spawned!",
+            TEST_ENTITY_ALREADY_GLOWING_MESSAGE = PREFIX + "Test entity already glowing!",
+            TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE = PREFIX + "Test entity is not glowing for now.",
+            TEST_ENTITY_GLOWING_NOW_MESSAGE = PREFIX + "The test entity is now glowing for all viewers of the glow object.",
+            TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = PREFIX + "The test entity is now not glowing for all viewers of the glow object.",
+            PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE = PREFIX + "Player with name '{target_name}' not found.",
+            PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' can now see test entity glow.",
+            PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' no longer sees test entity glow.";
 
-    private Entity entity;
+    @NonFinal Entity entity;
 
-    private final Glow glow;
+    Glow glow;
 
-    public GlowCommand(GlowExamplePlugin plugin) {
-        this.glow = Glow.builder()
-                .plugin(plugin)
-                .animatedColor(ChatColor.AQUA, ChatColor.GREEN, ChatColor.RED, ChatColor.YELLOW, ChatColor.LIGHT_PURPLE)
-                .name("test")
-                .updatePeriod(10L)
-                .asyncAnimation(true)
-                .build();
+    public GlowCommand(Glow glow) {
+        this.glow = glow;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments)
-    {
-        if (!(sender instanceof Player))
-        {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] arguments) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You can't use this command from console.");
             return false;
         }
 
         Player player = (Player) sender;
 
-        switch (arguments.length)
-        {
+        switch (arguments.length) {
             case 0:
                 HELP_MESSAGE.forEach(sender::sendMessage);
                 return true;
 
             case 1:
-                switch (arguments[0].toLowerCase())
-                {
+                switch (arguments[0].toLowerCase()) {
                     case "spawn":
-                        if (this.entity != null)
-                        {
+                        if (this.entity != null) {
                             player.sendMessage(TEST_ENTITY_ALREADY_SPAWNED_MESSAGE);
                             return true;
                         }
@@ -108,14 +99,12 @@ implements CommandExecutor
                         return true;
 
                     case "enable":
-                        if (this.entity == null)
-                        {
+                        if (this.entity == null) {
                             player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                             return true;
                         }
 
-                        if (this.glow.hasHolder(this.entity))
-                        {
+                        if (this.glow.hasHolder(this.entity)) {
                             player.sendMessage(TEST_ENTITY_ALREADY_GLOWING_MESSAGE);
                             return true;
                         }
@@ -126,14 +115,12 @@ implements CommandExecutor
                         return true;
 
                     case "disable":
-                        if (this.entity == null)
-                        {
+                        if (this.entity == null) {
                             player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                             return true;
                         }
 
-                        if (!this.glow.hasHolder(this.entity))
-                        {
+                        if (!this.glow.hasHolder(this.entity)) {
                             player.sendMessage(TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE);
                             return true;
                         }
@@ -147,14 +134,12 @@ implements CommandExecutor
                 return false;
 
             case 2:
-                if (this.entity == null)
-                {
+                if (this.entity == null) {
                     player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                     return true;
                 }
 
-                if (!this.glow.hasHolder(this.entity))
-                {
+                if (!this.glow.hasHolder(this.entity)) {
                     player.sendMessage(TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE);
                     return true;
                 }
@@ -163,15 +148,13 @@ implements CommandExecutor
 
                 Player target = Bukkit.getPlayerExact(targetName);
 
-                if (target == null || !target.isOnline())
-                {
+                if (target == null || !target.isOnline()) {
                     player.sendMessage(PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE
                             .replace("{target_name}", targetName));
                     return true;
                 }
 
-                switch (arguments[0].toLowerCase())
-                {
+                switch (arguments[0].toLowerCase()) {
                     case "addviewer":
                         this.glow.display(target);
 
@@ -185,10 +168,8 @@ implements CommandExecutor
                                 .replace("{target_name}", targetName));
                         return true;
                 }
-
                 return false;
         }
-
         return false;
     }
 }

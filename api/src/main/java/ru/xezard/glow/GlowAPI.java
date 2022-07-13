@@ -30,20 +30,16 @@ import org.bukkit.plugin.PluginManager;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
-import java.util.logging.Logger;
 
-public class GlowAPI
-{
+public class GlowAPI {
     private final Plugin plugin;
 
-    public GlowAPI(Plugin plugin) 
-    {
+    public GlowAPI(Plugin plugin) {
         this.plugin = plugin;
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if (pluginManager.getPlugin("ProtocolLib") == null)
-        {
+        if (pluginManager.getPlugin("ProtocolLib") == null) {
             plugin.getLogger().warning("[XGlow] No access to ProtocolLib! Is it installed?");
             plugin.getLogger().warning("[XGlow] Plugin has been disabled!");
 
@@ -55,36 +51,28 @@ public class GlowAPI
         this.registerPacketListener();
     }
 
-    private void registerListeners(PluginManager pluginManager)
-    {
+    private void registerListeners(PluginManager pluginManager) {
         pluginManager.registerEvents(new EntityDeathListener(), this.plugin);
         pluginManager.registerEvents(new PlayerQuitListener(), this.plugin);
     }
 
-    private void registerPacketListener()
-    {
-        ProtocolLibrary.getProtocolManager().addPacketListener
-        (
-                new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA)
-                {
+    private void registerPacketListener() {
+        ProtocolLibrary.getProtocolManager().addPacketListener(
+                new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA) {
                     @Override
-                    public void onPacketSending(PacketEvent event)
-                    {
+                    public void onPacketSending(PacketEvent event) {
                         PacketContainer packet = event.getPacket();
 
                         Entity entity = packet.getEntityModifier(event).read(0);
 
-                        GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) ->
-                        {
+                        GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
                             Player player = event.getPlayer();
 
-                            if (!glow.sees(player))
-                            {
+                            if (!glow.sees(player)) {
                                 return;
                             }
 
                             WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
-
                             WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
 
                             byte mask = dataWatcher.getByte(0);

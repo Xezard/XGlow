@@ -28,31 +28,25 @@ import java.util.List;
 
 @EqualsAndHashCode
 public class Animation<O>
-implements IAnimation<O>
-{
-    private Iterator<O> iterator;
+implements IAnimation<O> {
+    private final Iterator<O> iterator;
 
     @Getter
     protected List<O> values;
 
     @SafeVarargs
-    public Animation(O... values)
-    {
+    public Animation(O... values) {
         this.values = Arrays.asList(values);
-
         this.iterator = Iterators.cycle(this.values);
     }
 
-    public Animation(List<O> values)
-    {
+    public Animation(List<O> values) {
         this.iterator = Iterators.cycle(values);
-
         this.values = values;
     }
 
     @Override
-    public O next()
-    {
+    public O next() {
         return this.iterator.next();
     }
 }

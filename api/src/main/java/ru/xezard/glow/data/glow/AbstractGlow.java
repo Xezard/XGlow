@@ -18,6 +18,8 @@
  */
 package ru.xezard.glow.data.glow;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import ru.xezard.glow.data.animation.AbstractAnimatable;
 import ru.xezard.glow.data.animation.Animation;
 import ru.xezard.glow.data.animation.IAnimation;
@@ -29,26 +31,27 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@FieldDefaults(level = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractGlow
 extends AbstractAnimatable
-implements IGlow
-{
-    protected Set<Player> viewers = new HashSet<> ();
-    protected Set<Entity> holders = new HashSet<> ();
+implements IGlow {
+    Set<Player> viewers = new HashSet<> ();
+    Set<Entity> holders = new HashSet<> ();
 
     @Getter
-    protected IAnimation<ChatColor> animatedColor;
+    IAnimation<ChatColor> animatedColor;
 
     @Getter
-    protected String name;
+    String name;
 
-    public AbstractGlow(IAnimation<ChatColor> animatedColor, Plugin plugin, long updatePeriod, String name, boolean async)
-    {
+    public AbstractGlow(IAnimation<ChatColor> animatedColor, Plugin plugin,
+                        Duration updatePeriod, String name, boolean async) {
         super(plugin, updatePeriod, async);
 
         this.animatedColor = animatedColor;
@@ -57,58 +60,47 @@ implements IGlow
         GlowsManager.getInstance().addGlow(this);
     }
 
-    public AbstractGlow(ChatColor color, String name)
-    {
+    public AbstractGlow(ChatColor color, String name) {
         this.animatedColor = new Animation<> (color);
-
         this.name = name;
 
         GlowsManager.getInstance().addGlow(this);
     }
 
     @Override
-    public ChatColor getColor()
-    {
+    public ChatColor getColor() {
         return this.animatedColor.next();
     }
 
     @Override
-    public void setColor(IAnimation<ChatColor> animatedColor)
-    {
+    public void setColor(IAnimation<ChatColor> animatedColor) {
         this.animatedColor = animatedColor;
-
         this.broadcast();
     }
 
     @Override
-    public void setColor(ChatColor color)
-    {
+    public void setColor(ChatColor color) {
         this.animatedColor = new Animation<> (color);
-
         this.broadcast();
     }
 
     @Override
-    public void broadcast()
-    {
+    public void broadcast() {
         this.display(this.viewers);
     }
 
     @Override
-    public Set<Entity> getHolders()
-    {
+    public Set<Entity> getHolders() {
         return Collections.unmodifiableSet(this.holders);
     }
 
     @Override
-    public Set<Player> getViewers()
-    {
+    public Set<Player> getViewers() {
         return Collections.unmodifiableSet(this.viewers);
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.broadcast();
     }
 }

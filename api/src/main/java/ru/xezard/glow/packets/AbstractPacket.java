@@ -28,23 +28,19 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
-public abstract class AbstractPacket
-{
+public abstract class AbstractPacket {
     @Getter
     protected PacketContainer handle;
 
-    protected AbstractPacket(PacketContainer handle, PacketType type)
-    {
+    protected AbstractPacket(PacketContainer handle, PacketType type) {
         Preconditions.checkNotNull(handle, "packet handle cannot be null");
         Preconditions.checkArgument(Objects.equal(handle.getType(), type), handle.getHandle() + " is not a packet of type " + type);
 
         this.handle = handle;
     }
 
-    public void sendPacket(Iterable<Player> recipients)
-    {
-        for (Player receiver : recipients)
-        {
+    public void sendPacket(Iterable<Player> recipients) {
+        for (Player receiver : recipients) {
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
             } catch (InvocationTargetException e) {
@@ -53,10 +49,8 @@ public abstract class AbstractPacket
         }
     }
 
-    public void sendPacket(Player... recipients)
-    {
-        for (Player receiver : recipients)
-        {
+    public void sendPacket(Player... recipients) {
+        for (Player receiver : recipients) {
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
             } catch (InvocationTargetException e) {
@@ -65,13 +59,11 @@ public abstract class AbstractPacket
         }
     }
 
-    public void broadcastPacket()
-    {
+    public void broadcastPacket() {
         ProtocolLibrary.getProtocolManager().broadcastServerPacket(getHandle());
     }
 
-    public void receivePacket(Player sender)
-    {
+    public void receivePacket(Player sender) {
         try {
             ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, this.handle);
         } catch (Exception e) {
