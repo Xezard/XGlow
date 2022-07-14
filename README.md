@@ -1,7 +1,7 @@
 # XGlow
 
 ![Java](https://img.shields.io/badge/Java-8%2B-brightgreen)
-![Spigot](https://img.shields.io/badge/Tested%20on-Paper%201.13.*%20—%201.19.*-informational)
+![Paper](https://img.shields.io/badge/Tested%20on%20Paper-v.1.13.*%20--%201.19.*-informational)
 [![GitHub](https://img.shields.io/github/license/Xezard/XGlow)](https://github.com/Xezard/XGlow/blob/master/LICENSE) 
 [![Jitpack](https://jitpack.io/v/Xezard/XGlow.svg)](https://jitpack.io/#Xezard/XGlow) 
 ![Lines of code](https://img.shields.io/tokei/lines/github/Xezard/XGlow?label=lines%20of%20code) 
