@@ -40,11 +40,6 @@ extends AbstractGlow {
     }
 
     @Override
-    public boolean hasHolder(Entity entity) {
-        return this.holders.contains(entity);
-    }
-
-    @Override
     public void addHolders(Entity... entities) {
         this.processHolder(true, entities);
     }

@@ -63,11 +63,6 @@ implements IGlow {
     }
 
     @Override
-    public void broadcast() {
-        this.display(this.viewers);
-    }
-
-    @Override
     public Set<Entity> getHolders() {
         return Collections.unmodifiableSet(this.holders);
     }
