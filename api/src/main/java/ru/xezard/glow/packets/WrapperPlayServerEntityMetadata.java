@@ -37,6 +37,13 @@ extends AbstractPacket {
         this.handle.getModifier().writeDefaults();
     }
 
+    public WrapperPlayServerEntityMetadata(List<WrappedWatchableObject> metadata, int entityId) {
+        this();
+
+        this.setMetadata(metadata);
+        this.setEntityId(entityId);
+    }
+
     public WrapperPlayServerEntityMetadata(PacketContainer packet) {
         super(packet, TYPE);
     }

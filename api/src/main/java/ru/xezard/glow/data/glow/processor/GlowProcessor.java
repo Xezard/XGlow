@@ -3,6 +3,7 @@ package ru.xezard.glow.data.glow.processor;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +36,9 @@ implements IGlowProcessor {
     @Override
     public AbstractPacket createTeamPacket(Set<Entity> holders, ChatColor color, String teamName,
                                            AbstractWrapperPlayServerScoreboardTeam.Mode mode) {
+        Preconditions.checkArgument(holders.size() <= 40,
+                "Cannot create team packet with more than 40 entries!");
+
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
         team.setTeamName(teamName);
@@ -60,10 +64,7 @@ implements IGlowProcessor {
     public AbstractPacket createGlowPacket(Entity entity, boolean glow) {
         List<WrappedWatchableObject> metadata = this.createDataWatcher(entity, glow).getWatchableObjects();
 
-        return new WrapperPlayServerEntityMetadata() {{
-            this.setEntityId(entity.getEntityId());
-            this.setMetadata(metadata);
-        }};
+        return new WrapperPlayServerEntityMetadata(metadata, entity.getEntityId());
     }
 
     private WrappedDataWatcher createDataWatcher(Entity entity, boolean enableGlow) {
