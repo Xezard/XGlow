@@ -20,18 +20,13 @@ package ru.xezard.glow.data.glow;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.xezard.glow.data.animation.AbstractAnimatable;
-import ru.xezard.glow.data.animation.Animation;
-import ru.xezard.glow.data.animation.IAnimation;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,48 +34,26 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractGlow
-extends AbstractAnimatable
 implements IGlow {
     Set<Player> viewers = new HashSet<> ();
     Set<Entity> holders = new HashSet<> ();
 
     @Getter
-    IAnimation<ChatColor> animatedColor;
+    ChatColor color;
 
     @Getter
     String name;
 
-    public AbstractGlow(IAnimation<ChatColor> animatedColor, Plugin plugin,
-                        Duration updatePeriod, String name, boolean async) {
-        super(plugin, updatePeriod, async);
-
-        this.animatedColor = animatedColor;
-        this.name = name;
-
-        GlowsManager.getInstance().addGlow(this);
-    }
-
     public AbstractGlow(ChatColor color, String name) {
-        this.animatedColor = new Animation<> (color);
+        this.color = color;
         this.name = name;
 
         GlowsManager.getInstance().addGlow(this);
-    }
-
-    @Override
-    public ChatColor getColor() {
-        return this.animatedColor.next();
-    }
-
-    @Override
-    public void setColor(IAnimation<ChatColor> animatedColor) {
-        this.animatedColor = animatedColor;
-        this.broadcast();
     }
 
     @Override
     public void setColor(ChatColor color) {
-        this.animatedColor = new Animation<> (color);
+        this.color = color;
         this.broadcast();
     }
 
@@ -97,10 +70,5 @@ implements IGlow {
     @Override
     public Set<Player> getViewers() {
         return Collections.unmodifiableSet(this.viewers);
-    }
-
-    @Override
-    public void tick() {
-        this.broadcast();
     }
 }

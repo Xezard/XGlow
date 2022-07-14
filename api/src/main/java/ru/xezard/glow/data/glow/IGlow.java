@@ -21,7 +21,6 @@ package ru.xezard.glow.data.glow;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import ru.xezard.glow.data.animation.IAnimation;
 import ru.xezard.glow.data.players.IPlayerViewable;
 
 import java.util.Set;
@@ -35,8 +34,6 @@ extends IPlayerViewable {
     String getName();
 
     boolean hasHolder(Entity entity);
-
-    void setColor(IAnimation<ChatColor> color);
 
     void setColor(ChatColor color);
 

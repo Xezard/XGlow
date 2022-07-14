@@ -30,12 +30,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import ru.xezard.glow.data.animation.Animation;
-import ru.xezard.glow.data.animation.IAnimation;
 import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,11 +41,6 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = false)
 public class Glow
 extends AbstractGlow {
-    public Glow(IAnimation<ChatColor> animatedColor, Plugin plugin,
-                Duration updatePeriod, String name, boolean async) {
-        super(animatedColor, plugin, updatePeriod, name, async);
-    }
-
     public Glow(ChatColor color, String name) {
         super(color, name);
     }
@@ -94,7 +85,7 @@ extends AbstractGlow {
             return team;
         }
 
-        team.setColor(this.animatedColor.next());
+        team.setColor(this.color);
         team.setNameTagVisibility("ALWAYS");
 
         team.setPlayers(
@@ -189,23 +180,6 @@ extends AbstractGlow {
         packets.add(this.createTeamPacket(display ? WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED : WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
-
-        if (this.animatedColor.isAnimated()) {
-            if (display) {
-                if (this.viewers.size() <= 0 || this.animated) {
-                    return;
-                }
-
-                this.startAnimation();
-                return;
-            }
-
-            if (this.viewers.size() > 0 || !this.animated) {
-                return;
-            }
-
-            this.stopAnimation();
-        }
     }
 
     @Override
@@ -224,38 +198,11 @@ extends AbstractGlow {
     @NoArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class GlowBuilder {
-        IAnimation<ChatColor> animatedColor;
-
-        Plugin plugin;
-
-        Duration updatePeriod;
-
+        ChatColor color;
         String name;
 
-        boolean asyncAnimation;
-
-        public GlowBuilder animatedColor(IAnimation<ChatColor> animatedColor) {
-            this.animatedColor = animatedColor;
-            return this;
-        }
-
-        public GlowBuilder animatedColor(List<ChatColor> animatedColor) {
-            this.animatedColor = new Animation<> (animatedColor);
-            return this;
-        }
-
-        public GlowBuilder animatedColor(ChatColor... displayNameColor) {
-            this.animatedColor = new Animation<> (displayNameColor);
-            return this;
-        }
-
-        public GlowBuilder plugin(Plugin plugin) {
-            this.plugin = plugin;
-            return this;
-        }
-
-        public GlowBuilder updatePeriod(Duration updatePeriod) {
-            this.updatePeriod = updatePeriod;
+        public GlowBuilder color(ChatColor color) {
+            this.color = color;
             return this;
         }
 
@@ -264,23 +211,8 @@ extends AbstractGlow {
             return this;
         }
 
-        public GlowBuilder asyncAnimation(boolean asyncAnimation) {
-            this.asyncAnimation = asyncAnimation;
-            return this;
-        }
-
         public Glow build() {
-            if (this.animatedColor.isAnimated() && this.plugin == null) {
-                return new Glow(this.animatedColor.next(), this.name);
-            }
-
-            return new Glow(
-                    this.animatedColor,
-                    this.plugin,
-                    this.updatePeriod,
-                    this.name,
-                    this.asyncAnimation
-            );
+            return new Glow(this.color, this.name);
         }
     }
 }
