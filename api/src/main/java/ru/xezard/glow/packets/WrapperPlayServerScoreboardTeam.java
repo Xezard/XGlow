@@ -1,164 +1,147 @@
-/*
- * PacketWrapper - ProtocolLib wrappers for Minecraft packets
- * Copyright (C) dmulloy2 <http://dmulloy2.net>
- * Copyright (C) Kristian S. Strangeland
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package ru.xezard.glow.packets;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.InternalStructure;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.IntEnum;
-import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
+import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v13_16;
+import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v18_19;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class WrapperPlayServerScoreboardTeam
-extends AbstractPacket {
-    public static final PacketType TYPE = PacketType.Play.Server.SCOREBOARD_TEAM;
+implements IWrapperPlayServerScoreboardTeam {
+    IWrapperPlayServerScoreboardTeam wrapper;
 
     public WrapperPlayServerScoreboardTeam() {
-        super(new PacketContainer(TYPE), TYPE);
+        MinecraftVersion version = ProtocolLibrary.getProtocolManager().getMinecraftVersion();
 
-        this.handle.getModifier().writeDefaults();
+        switch (version.getMinor()) {
+            case 16:
+            case 15:
+            case 14:
+            case 13:
+                this.wrapper = new WrapperPlayServerScoreboardTeam_v13_16();
+                break;
+
+            case 19:
+            case 18:
+            default:
+                this.wrapper = new WrapperPlayServerScoreboardTeam_v18_19();
+                break;
+        }
+
+        //    public static final MinecraftVersion CAVES_CLIFFS_2 = new MinecraftVersion("1.18");
+        //    public static final MinecraftVersion CAVES_CLIFFS_1 = new MinecraftVersion("1.17");
+        //    public static final MinecraftVersion NETHER_UPDATE_2 = new MinecraftVersion("1.16.2");
+        //    public static final MinecraftVersion NETHER_UPDATE = new MinecraftVersion("1.16");
+        //    public static final MinecraftVersion BEE_UPDATE = new MinecraftVersion("1.15");
+        //    public static final MinecraftVersion VILLAGE_UPDATE = new MinecraftVersion("1.14");
+        //    public static final MinecraftVersion AQUATIC_UPDATE = new MinecraftVersion("1.13");
+        //    public static final MinecraftVersion COLOR_UPDATE = new MinecraftVersion("1.12");
+        //    public static final MinecraftVersion EXPLORATION_UPDATE = new MinecraftVersion("1.11");
+        //    public static final MinecraftVersion FROSTBURN_UPDATE = new MinecraftVersion("1.10");
+        //    public static final MinecraftVersion COMBAT_UPDATE = new MinecraftVersion("1.9");
+        //    public static final MinecraftVersion BOUNTIFUL_UPDATE = new MinecraftVersion("1.8");
     }
 
-    public WrapperPlayServerScoreboardTeam(PacketContainer packet) {
-        super(packet, TYPE);
+    @Override
+    public AbstractPacket getPacket() {
+        return this.wrapper.getPacket();
     }
 
+    @Override
     public String getTeamName() {
-        return this.handle.getStrings().read(0);
+        return this.wrapper.getTeamName();
     }
 
+    @Override
     public void setTeamName(String value) {
-        this.handle.getStrings().write(0, value);
+        this.wrapper.setTeamName(value);
     }
 
-    public int getMode() {
-        return this.handle.getIntegers().read(0);
+    @Override
+    public AbstractWrapperPlayServerScoreboardTeam.Mode getMode() {
+        return this.wrapper.getMode();
     }
 
-    public void setMode(int value) {
-        this.handle.getIntegers().write(0, value);
+    @Override
+    public void setMode(AbstractWrapperPlayServerScoreboardTeam.Mode value) {
+        this.wrapper.setMode(value);
     }
 
-    public WrappedChatComponent getDisplayName() {
-        return this.handle.getChatComponents().read(0);
+    @Override
+    public Optional<WrappedChatComponent> getDisplayName() {
+        return this.wrapper.getDisplayName();
     }
 
+    @Override
     public void setDisplayName(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(0, value);
+        this.wrapper.setDisplayName(value);
     }
 
-    public WrappedChatComponent getPrefix() {
-        return this.handle.getChatComponents().read(1);
+    @Override
+    public Optional<WrappedChatComponent> getPrefix() {
+        return this.wrapper.getPrefix();
     }
 
+    @Override
     public void setPrefix(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(1, value);
+        this.wrapper.setPrefix(value);
     }
 
-    public WrappedChatComponent getSuffix() {
-        return this.handle.getChatComponents().read(2);
+    @Override
+    public Optional<WrappedChatComponent> getSuffix() {
+        return this.wrapper.getSuffix();
     }
 
+    @Override
     public void setSuffix(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(2, value);
+        this.wrapper.setSuffix(value);
     }
 
-    public String getNameTagVisibility() {
-        return this.handle.getStrings().read(1);
+    @Override
+    public AbstractWrapperPlayServerScoreboardTeam.NameTagVisibility getNameTagVisibility() {
+        return this.wrapper.getNameTagVisibility();
     }
 
-    public void setNameTagVisibility(String value) {
-        this.handle.getStrings().write(1, value);
+    @Override
+    public void setNameTagVisibility(AbstractWrapperPlayServerScoreboardTeam.
+                                             NameTagVisibility value) {
+        this.wrapper.setNameTagVisibility(value);
     }
 
-    public ChatColor getColor() {
-        return this.handle.getEnumModifier(ChatColor.class,
-                MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .read(0);
+    @Override
+    public Optional<ChatColor> getColor() {
+        return this.wrapper.getColor();
     }
 
+    @Override
     public void setColor(ChatColor value) {
-        this.handle.getEnumModifier(ChatColor.class,
-                MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .write(0, value);
+        this.wrapper.setColor(value);
     }
 
-    public String getCollisionRule() {
-        return this.handle.getStrings().read(2);
+    @Override
+    public AbstractWrapperPlayServerScoreboardTeam.CollisionRule getCollisionRule() {
+        return this.wrapper.getCollisionRule();
     }
 
-    public void setCollisionRule(String value) {
-        this.handle.getStrings().write(2, value);
+    @Override
+    public void setCollisionRule(AbstractWrapperPlayServerScoreboardTeam.CollisionRule value) {
+        this.wrapper.setCollisionRule(value);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public List<String> getPlayers() {
-        return (List<String>) this.handle.getSpecificModifier(Collection.class)
-                .read(0);
+        return this.wrapper.getPlayers();
     }
 
+    @Override
     public void setPlayers(List<String> value) {
-        this.handle.getSpecificModifier(Collection.class)
-                .write(0, value);
-    }
-
-    /**
-     * Retrieve pack option data. Pack data is calculated as follows:
-     *
-     * <pre>
-     * <code>
-     * int data = 0;
-     * if (team.allowFriendlyFire()) {
-     *     data |= 1;
-     * }
-     * if (team.canSeeFriendlyInvisibles()) {
-     *     data |= 2;
-     * }
-     * </code>
-     * </pre>
-     *
-     * @return The current pack option data
-     */
-    public int getPackOptionData() {
-        return this.handle.getIntegers().read(1);
-    }
-
-    public void setPackOptionData(int value) {
-        this.handle.getIntegers().write(1, value);
-    }
-
-    public static class Mode extends IntEnum {
-        public static final int TEAM_CREATED = 0,
-                                TEAM_REMOVED = 1,
-                                TEAM_UPDATED = 2,
-                                PLAYERS_ADDED = 3,
-                                PLAYERS_REMOVED = 4;
-
-        @Getter
-        private static final Mode INSTANCE = new Mode();
+        this.wrapper.setPlayers(value);
     }
 }

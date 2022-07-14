@@ -3,5 +3,4 @@ main: ru.xezard.glow.GlowPlugin
 author: Xezard
 website: xezard.ru
 version: 1.0.6
-api-version: 1.13
 depend: [ProtocolLib]

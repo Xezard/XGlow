@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import ru.xezard.glow.packets.AbstractPacket;
+import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
 import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
 import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
 
@@ -24,8 +25,6 @@ implements IGlowProcessor {
     static WrappedDataWatcher.Serializer BYTE_SERIALIZER =
             WrappedDataWatcher.Registry.get(Byte.class);
 
-    String teamName;
-
     @Override
     public List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean glow) {
         return entities.stream()
@@ -34,26 +33,27 @@ implements IGlowProcessor {
     }
 
     @Override
-    public AbstractPacket createTeamPacket(Set<Entity> holders, ChatColor color, int mode) {
+    public AbstractPacket createTeamPacket(Set<Entity> holders, ChatColor color, String teamName,
+                                           AbstractWrapperPlayServerScoreboardTeam.Mode mode) {
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
-        team.setTeamName(this.teamName);
-        team.setDisplayName(WrappedChatComponent.fromText(this.teamName));
+        team.setTeamName(teamName);
+        team.setDisplayName(WrappedChatComponent.fromText(teamName));
         team.setMode(mode);
 
-        if (mode == WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED) {
-            return team;
+        if (mode == AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED) {
+            return team.getPacket();
         }
 
         team.setColor(color);
-        team.setNameTagVisibility("ALWAYS");
+        team.setNameTagVisibility(AbstractWrapperPlayServerScoreboardTeam.NameTagVisibility.ALWAYS);
 
         team.setPlayers(holders.stream()
                 .map((holder) -> holder instanceof OfflinePlayer ?
                         holder.getName() : holder.getUniqueId().toString())
                 .collect(Collectors.toList()));
 
-        return team;
+        return team.getPacket();
     }
 
     @Override
