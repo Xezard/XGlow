@@ -20,12 +20,15 @@ package ru.xezard.glow.data.glow;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ru.xezard.glow.data.glow.processor.GlowProcessor;
+import ru.xezard.glow.data.glow.processor.IGlowProcessor;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,13 +41,16 @@ implements IGlow {
     Set<Player> viewers = new HashSet<> ();
     Set<Entity> holders = new HashSet<> ();
 
+    IGlowProcessor processor;
+
     @Getter
-    ChatColor color;
+    @NonFinal ChatColor color;
 
     @Getter
     String name;
 
     public AbstractGlow(ChatColor color, String name) {
+        this.processor = new GlowProcessor(name);
         this.color = color;
         this.name = name;
 

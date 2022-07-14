@@ -18,15 +18,14 @@
  */
 package ru.xezard.glow.packets;
 
-import java.util.List;
-
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+
+import java.util.List;
 
 public class WrapperPlayServerEntityMetadata
 extends AbstractPacket {
@@ -42,11 +41,11 @@ extends AbstractPacket {
         super(packet, TYPE);
     }
 
-    public int getEntityID() {
+    public int getEntityId() {
         return this.handle.getIntegers().read(0);
     }
 
-    public void setEntityID(int value) {
+    public void setEntityId(int value) {
         this.handle.getIntegers().write(0, value);
     }
 

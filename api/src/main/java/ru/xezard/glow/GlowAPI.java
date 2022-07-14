@@ -57,37 +57,36 @@ public class GlowAPI {
     }
 
     private void registerPacketListener() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(
-                new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA) {
-                    @Override
-                    public void onPacketSending(PacketEvent event) {
-                        PacketContainer packet = event.getPacket();
+        PacketAdapter adapter = new PacketAdapter(this.plugin, ListenerPriority.NORMAL, PacketType.Play.Server.ENTITY_METADATA) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                PacketContainer packet = event.getPacket();
+                Entity entity = packet.getEntityModifier(event).read(0);
 
-                        Entity entity = packet.getEntityModifier(event).read(0);
+                GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
+                    Player player = event.getPlayer();
 
-                        GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
-                            Player player = event.getPlayer();
-
-                            if (!glow.sees(player)) {
-                                return;
-                            }
-
-                            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
-                            WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
-
-                            byte mask = dataWatcher.getByte(0);
-
-                            mask |= 0x40;
-
-                            dataWatcher.setObject(0, byteSerializer, mask);
-
-                            packet.getIntegers().write(0, entity.getEntityId());
-                            packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
-
-                            event.setPacket(packet);
-                        });
+                    if (!glow.sees(player)) {
+                        return;
                     }
-                }
-        );
+
+                    WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
+                    WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+
+                    byte mask = dataWatcher.getByte(0);
+
+                    mask |= 0x40;
+
+                    dataWatcher.setObject(0, byteSerializer, mask);
+
+                    packet.getIntegers().write(0, entity.getEntityId());
+                    packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+
+                    event.setPacket(packet);
+                });
+            }
+        };
+
+        ProtocolLibrary.getProtocolManager().addPacketListener(adapter);
     }
 }
