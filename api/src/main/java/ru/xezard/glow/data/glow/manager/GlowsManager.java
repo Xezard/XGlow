@@ -21,17 +21,15 @@ package ru.xezard.glow.data.glow.manager;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.xezard.glow.data.glow.IGlow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class GlowsManager
 implements IGlowsManager {
-    final List<IGlow> glows = new ArrayList<> ();
+    final Set<IGlow> glows = ConcurrentHashMap.newKeySet();
 
     static volatile GlowsManager instance;
 
@@ -48,13 +46,6 @@ implements IGlowsManager {
     }
 
     @Override
-    public Optional<IGlow> getGlowByEntity(Entity entity) {
-        return this.glows.stream()
-                         .filter((glow) -> glow.hasHolder(entity))
-                         .findFirst();
-    }
-
-    @Override
     public void addGlow(IGlow glow) {
         this.glows.add(glow);
     }
@@ -67,22 +58,7 @@ implements IGlowsManager {
     }
 
     @Override
-    public void removeGlowFrom(Entity entity) {
-        this.glows.forEach((glow) -> glow.removeHolders(entity));
-    }
-
-    @Override
-    public void removeViewer(Player viewer) {
-        this.glows.forEach((glow) -> glow.hideFrom(viewer));
-    }
-
-    @Override
-    public void clear() {
-        this.glows.forEach(this::removeGlow);
-    }
-
-    @Override
-    public List<IGlow> getGlows() {
-        return new ArrayList<> (this.glows);
+    public Set<IGlow> getGlows() {
+        return Collections.unmodifiableSet(this.glows);
     }
 }

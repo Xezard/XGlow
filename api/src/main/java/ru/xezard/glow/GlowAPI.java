@@ -20,14 +20,16 @@ package ru.xezard.glow;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.*;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import org.bukkit.plugin.Plugin;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
+import ru.xezard.glow.data.glow.processor.GlowProcessor;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
 
@@ -64,23 +66,14 @@ public class GlowAPI {
                 Entity entity = packet.getEntityModifier(event).read(0);
 
                 GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
-                    Player player = event.getPlayer();
-
-                    if (!glow.sees(player)) {
+                    if (!glow.sees(event.getPlayer())) {
                         return;
                     }
 
-                    WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
-                    WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
-
-                    byte mask = dataWatcher.getByte(0);
-
-                    mask |= 0x40;
-
-                    dataWatcher.setObject(0, byteSerializer, mask);
-
                     packet.getIntegers().write(0, entity.getEntityId());
-                    packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+                    packet.getWatchableCollectionModifier().write(0,
+                            GlowProcessor.getInstance().createDataWatcher(entity, true)
+                                    .getWatchableObjects());
 
                     event.setPacket(packet);
                 });

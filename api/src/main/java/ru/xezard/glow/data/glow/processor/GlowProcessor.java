@@ -44,6 +44,20 @@ implements IGlowProcessor {
     static WrappedDataWatcher.Serializer BYTE_SERIALIZER =
             WrappedDataWatcher.Registry.get(Byte.class);
 
+    static volatile GlowProcessor instance;
+
+    public static GlowProcessor getInstance() {
+        if (instance == null) {
+            synchronized (GlowProcessor.class) {
+                if (instance == null) {
+                    instance = new GlowProcessor();
+                }
+            }
+        }
+
+        return instance;
+    }
+
     @Override
     public List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean glow) {
         return entities.stream()
@@ -85,7 +99,8 @@ implements IGlowProcessor {
         return new WrapperPlayServerEntityMetadata(metadata, entity.getEntityId());
     }
 
-    private WrappedDataWatcher createDataWatcher(Entity entity, boolean enableGlow) {
+    @Override
+    public WrappedDataWatcher createDataWatcher(Entity entity, boolean enableGlow) {
         WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(entity).deepClone();
 
         byte mask = dataWatcher.getByte(0);

@@ -18,6 +18,7 @@
  */
 package ru.xezard.glow.data.glow.processor;
 
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import ru.xezard.glow.packets.AbstractPacket;
@@ -33,4 +34,6 @@ public interface IGlowProcessor {
     List<AbstractPacket> createGlowPackets(Set<Entity> entities, boolean enableGlow);
 
     AbstractPacket createGlowPacket(Entity entity, boolean enableGlow);
+
+    WrappedDataWatcher createDataWatcher(Entity entity, boolean enableGlow);
 }

@@ -26,14 +26,14 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ru.xezard.glow.data.glow.processor.GlowProcessor;
 import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Glow
 extends AbstractGlow {
     public Glow(ChatColor color, String name) {
@@ -61,23 +61,25 @@ extends AbstractGlow {
                 continue;
             }
 
-            packets.add(PROCESSOR.createGlowPacket(entity, add));
+            packets.add(GlowProcessor.getInstance().createGlowPacket(entity, add));
         }
 
         if (packets.isEmpty()) {
             return;
         }
 
-        packets.add(PROCESSOR.createTeamPacket(this.holders, this.color, this.name,
-                add ? AbstractWrapperPlayServerScoreboardTeam.Mode.PLAYERS_ADDED :
-                        AbstractWrapperPlayServerScoreboardTeam.Mode.PLAYERS_REMOVED));
+        packets.add(GlowProcessor.getInstance()
+                .createTeamPacket(this.holders, this.color, this.name,
+                        add ? AbstractWrapperPlayServerScoreboardTeam.Mode.PLAYERS_ADDED :
+                                AbstractWrapperPlayServerScoreboardTeam.Mode.PLAYERS_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(this.viewers));
     }
 
     @Override
     public void display(Player... viewers) {
-        List<AbstractPacket> packets = PROCESSOR.createGlowPackets(this.holders, true);
+        List<AbstractPacket> packets = GlowProcessor.getInstance()
+                .createGlowPackets(this.holders, true);
 
         for (Player viewer : viewers) {
             if (this.viewers.contains(viewer)) {
@@ -87,8 +89,9 @@ extends AbstractGlow {
             this.render(viewer);
         }
 
-        packets.add(PROCESSOR.createTeamPacket(this.holders, this.color, this.name,
-                AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED));
+        packets.add(GlowProcessor.getInstance()
+                .createTeamPacket(this.holders, this.color, this.name,
+                        AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED));
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
     }
@@ -104,7 +107,8 @@ extends AbstractGlow {
     }
 
     private void processView(boolean display, Player... viewers) {
-        List<AbstractPacket> packets = PROCESSOR.createGlowPackets(this.holders, display);
+        List<AbstractPacket> packets = GlowProcessor.getInstance()
+                .createGlowPackets(this.holders, display);
 
         for (Player viewer : viewers) {
             if (display == this.viewers.contains(viewer)) {
@@ -119,17 +123,18 @@ extends AbstractGlow {
             this.viewers.remove(viewer);
         }
 
-        packets.add(PROCESSOR.createTeamPacket(this.holders, this.color, this.name,
-                display ? AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED :
-                        AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED));
+        packets.add(GlowProcessor.getInstance()
+                .createTeamPacket(this.holders, this.color, this.name,
+                        display ? AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED :
+                                AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED));
 
         packets.forEach((packet) -> packet.sendPacket(viewers));
     }
 
     @Override
     public void destroy() {
-        new HashSet<> (this.holders).forEach(this::removeHolders);
-        new HashSet<> (this.viewers).forEach(this::hideFrom);
+        this.hideFromEveryone();
+        this.getHolders().forEach(this::removeHolders);
 
         this.holders.clear();
         this.viewers.clear();

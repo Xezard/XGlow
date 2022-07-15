@@ -34,7 +34,7 @@ extends IPlayerViewable {
     String getName();
 
     default boolean hasHolder(Entity entity) {
-        return this.getHolders().contains(entity);
+        return entity != null && this.getHolders().contains(entity);
     }
 
     void setColor(ChatColor color);

@@ -27,21 +27,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
-import ru.xezard.glow.data.glow.processor.GlowProcessor;
-import ru.xezard.glow.data.glow.processor.IGlowProcessor;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-@FieldDefaults(level = AccessLevel.PROTECTED)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 public abstract class AbstractGlow
 implements IGlow {
-    static final IGlowProcessor PROCESSOR = new GlowProcessor();
-
-    Set<Player> viewers = new HashSet<> ();
-    Set<Entity> holders = new HashSet<> ();
+    Set<Player> viewers = ConcurrentHashMap.newKeySet();
+    Set<Entity> holders = ConcurrentHashMap.newKeySet();
 
     @Getter
     @NonFinal ChatColor color;

@@ -18,25 +18,36 @@
  */
 package ru.xezard.glow.data.glow.manager;
 
-import ru.xezard.glow.data.glow.IGlow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ru.xezard.glow.data.glow.IGlow;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface IGlowsManager {
-    List<IGlow> getGlows();
+    Set<IGlow> getGlows();
 
-    Optional<IGlow> getGlowByEntity(Entity entity);
+    default Optional<IGlow> getGlowByEntity(Entity entity) {
+        return this.getGlows()
+                   .stream()
+                   .filter((glow) -> glow.hasHolder(entity))
+                   .findFirst();
+    }
 
     void addGlow(IGlow glow);
 
     void removeGlow(IGlow glow);
 
-    void removeGlowFrom(Entity entity);
+    default void removeGlowFrom(Entity entity) {
+        this.getGlows().forEach((glow) -> glow.removeHolders(entity));
+    }
 
-    void removeViewer(Player viewer);
+    default void removeViewer(Player viewer) {
+        this.getGlows().forEach((glow) -> glow.hideFrom(viewer));
+    }
 
-    void clear();
+    default void clear() {
+        this.getGlows().forEach(this::removeGlow);
+    }
 }
