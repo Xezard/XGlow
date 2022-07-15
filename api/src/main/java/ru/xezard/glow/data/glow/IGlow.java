@@ -33,6 +33,10 @@ extends IPlayerViewable {
 
     String getName();
 
+    default boolean hasHolders() {
+        return !this.getHolders().isEmpty();
+    }
+
     default boolean hasHolder(Entity entity) {
         return entity != null && this.getHolders().contains(entity);
     }
