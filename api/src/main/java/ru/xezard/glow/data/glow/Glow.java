@@ -26,6 +26,7 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.data.glow.processor.GlowProcessor;
 import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
@@ -136,8 +137,7 @@ extends AbstractGlow {
         this.hideFromEveryone();
         this.getHolders().forEach(this::removeHolders);
 
-        this.holders.clear();
-        this.viewers.clear();
+        GlowsManager.getInstance().removeGlow(this);
     }
 
     public static GlowBuilder builder() {

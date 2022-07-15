@@ -53,7 +53,9 @@ implements IGlowsManager {
 
     @Override
     public void removeGlow(IGlow glow) {
-        glow.destroy();
+        if (glow.hasViewers() || glow.hasHolders()) {
+            glow.destroy();
+        }
 
         this.glows.remove(glow);
     }
