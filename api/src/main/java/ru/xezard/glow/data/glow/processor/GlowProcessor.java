@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
@@ -44,7 +45,7 @@ implements IGlowProcessor {
     static WrappedDataWatcher.Serializer BYTE_SERIALIZER =
             WrappedDataWatcher.Registry.get(Byte.class);
 
-    static volatile GlowProcessor instance;
+    @NonFinal static volatile GlowProcessor instance;
 
     public static GlowProcessor getInstance() {
         if (instance == null) {

@@ -20,18 +20,19 @@ package ru.xezard.glow.data.glow.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import ru.xezard.glow.data.glow.IGlow;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class GlowsManager
 implements IGlowsManager {
-    final Set<IGlow> glows = ConcurrentHashMap.newKeySet();
+    Set<IGlow> glows = ConcurrentHashMap.newKeySet();
 
-    static volatile GlowsManager instance;
+    @NonFinal static volatile GlowsManager instance;
 
     public static GlowsManager getInstance() {
         if (instance == null) {
