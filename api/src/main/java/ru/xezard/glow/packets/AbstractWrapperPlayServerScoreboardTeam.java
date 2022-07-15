@@ -21,9 +21,15 @@ package ru.xezard.glow.packets;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.base.Preconditions;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractWrapperPlayServerScoreboardTeam
 extends AbstractPacket
@@ -34,10 +40,6 @@ implements IWrapperPlayServerScoreboardTeam {
         super(new PacketContainer(TYPE), TYPE);
 
         this.handle.getModifier().writeDefaults();
-    }
-
-    public AbstractWrapperPlayServerScoreboardTeam(PacketContainer packet) {
-        super(packet, TYPE);
     }
 
     @Override
@@ -89,17 +91,39 @@ implements IWrapperPlayServerScoreboardTeam {
         PLAYERS_REMOVED
     }
 
+    @Getter
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public enum NameTagVisibility {
-        ALWAYS,
-        HIDE_FOR_OTHER_TEAMS,
-        HIDE_FOR_OWN_TEAM,
-        NEVER
+        ALWAYS("always"),
+        HIDE_FOR_OTHER_TEAMS("hideForOtherTeams"),
+        HIDE_FOR_OWN_TEAM("hideForOwnTeam"),
+        NEVER("never");
+
+        String identifier;
+
+        public static Optional<NameTagVisibility> getByIdentifier(String identifier) {
+            return Arrays.stream(values())
+                         .filter((visibility) -> visibility.getIdentifier().equalsIgnoreCase(identifier))
+                         .findFirst();
+        }
     }
 
+    @Getter
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public enum CollisionRule {
-        ALWAYS,
-        PUSH_OTHER_TEAMS,
-        PUSH_OWN_TEAM,
-        NEVER
+        ALWAYS("always"),
+        PUSH_OTHER_TEAMS("pushOtherTeams"),
+        PUSH_OWN_TEAM("pushOwnTeam"),
+        NEVER("never");
+
+        String identifier;
+
+        public static Optional<CollisionRule> getByIdentifier(String identifier) {
+            return Arrays.stream(values())
+                         .filter((rule) -> rule.getIdentifier().equalsIgnoreCase(identifier))
+                         .findFirst();
+        }
     }
 }

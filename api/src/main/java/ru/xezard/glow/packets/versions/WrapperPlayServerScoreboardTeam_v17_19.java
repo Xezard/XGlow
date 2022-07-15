@@ -66,15 +66,15 @@ extends AbstractWrapperPlayServerScoreboardTeam {
     @Override
     public NameTagVisibility getNameTagVisibility() {
         return this.handle.getOptionalStructures().read(0)
-                .map((structure) -> NameTagVisibility.valueOf(
-                        structure.getStrings().read(0).toUpperCase()))
+                .flatMap((structure) -> NameTagVisibility.getByIdentifier(
+                        structure.getStrings().read(0)))
                 .orElse(NameTagVisibility.NEVER);
     }
 
     @Override
     public void setNameTagVisibility(NameTagVisibility value) {
         this.handle.getOptionalStructures().read(0).map((structure) ->
-                structure.getStrings().write(0, value.name()));
+                structure.getStrings().write(0, value.getIdentifier()));
     }
 
     @Override
@@ -96,14 +96,14 @@ extends AbstractWrapperPlayServerScoreboardTeam {
     @Override
     public CollisionRule getCollisionRule() {
         return this.handle.getOptionalStructures().read(0)
-                .map((structure) -> CollisionRule.valueOf(
-                        structure.getStrings().read(1).toUpperCase()))
+                .flatMap((structure) -> CollisionRule.getByIdentifier(
+                        structure.getStrings().read(1)))
                 .orElse(CollisionRule.NEVER);
     }
 
     @Override
     public void setCollisionRule(CollisionRule value) {
         this.handle.getOptionalStructures().read(0).map((structure) ->
-                structure.getStrings().write(1, value.name()));
+                structure.getStrings().write(1, value.getIdentifier()));
     }
 }

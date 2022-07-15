@@ -18,78 +18,86 @@
  */
 package ru.xezard.glow.packets.versions;
 
-import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.ChatColor;
 import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.Optional;
 
-public class WrapperPlayServerScoreboardTeam_v13_16
+public class WrapperPlayServerScoreboardTeam_v12
 extends AbstractWrapperPlayServerScoreboardTeam {
     @Override
+    public Mode getMode() {
+        return Mode.values()[this.handle.getIntegers().read(1)];
+    }
+
+    @Override
+    public void setMode(Mode value) {
+        this.handle.getIntegers().write(1, value.ordinal());
+    }
+
+    @Override
     public Optional<WrappedChatComponent> getDisplayName() {
-        return Optional.ofNullable(this.handle.getChatComponents().read(0));
+        return Optional.of(WrappedChatComponent.fromJson(this.handle.getStrings().read(1)));
     }
 
     @Override
     public void setDisplayName(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(0, value);
+        this.handle.getStrings().write(0, value.getJson());
     }
 
     @Override
     public Optional<WrappedChatComponent> getPrefix() {
-        return Optional.ofNullable(this.handle.getChatComponents().read(1));
+        return Optional.of(WrappedChatComponent.fromJson(this.handle.getStrings().read(2)));
     }
 
     @Override
     public void setPrefix(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(1, value);
+        this.handle.getStrings().write(2, value.getJson());
     }
 
     @Override
     public Optional<WrappedChatComponent> getSuffix() {
-        return Optional.ofNullable(this.handle.getChatComponents().read(2));
+        return Optional.of(WrappedChatComponent.fromJson(this.handle.getStrings().read(3)));
     }
 
     @Override
     public void setSuffix(WrappedChatComponent value) {
-        this.handle.getChatComponents().write(2, value);
+        this.handle.getStrings().write(3, value.getJson());
     }
 
     @Override
     public NameTagVisibility getNameTagVisibility() {
-        return NameTagVisibility.getByIdentifier(this.handle.getStrings().read(1).toUpperCase())
+        return NameTagVisibility.getByIdentifier(this.handle.getStrings().read(4))
                                 .orElse(NameTagVisibility.NEVER);
     }
 
     @Override
     public void setNameTagVisibility(NameTagVisibility nameTagVisibility) {
-        this.handle.getStrings().write(1, nameTagVisibility.getIdentifier());
+        this.handle.getStrings().write(4, nameTagVisibility.getIdentifier());
     }
 
     @Override
     public Optional<ChatColor> getColor() {
-        return Optional.of(this.handle.getEnumModifier(ChatColor.class,
-                        MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .read(0));
+        return Optional.of(ChatColor.values()[this.handle.getIntegers().read(0)]);
     }
 
     @Override
-    public void setColor(ChatColor value) {
-        this.handle.getEnumModifier(ChatColor.class,
-                        MinecraftReflection.getMinecraftClass("EnumChatFormat"))
-                .write(0, value);
+    public void setColor(ChatColor color) {
+        int value = color.ordinal() > 15 ? -1 : color.ordinal();
+
+        this.setPrefix(WrappedChatComponent.fromText(color + ""));
+        this.handle.getIntegers().write(0, value);
     }
 
     @Override
     public CollisionRule getCollisionRule() {
-        return CollisionRule.getByIdentifier(this.handle.getStrings().read(2))
+        return CollisionRule.getByIdentifier(this.handle.getStrings().read(5))
                             .orElse(CollisionRule.NEVER);
     }
 
     @Override
     public void setCollisionRule(CollisionRule value) {
-        this.handle.getStrings().write(2, value.getIdentifier());
+        this.handle.getStrings().write(5, value.getIdentifier());
     }
 }

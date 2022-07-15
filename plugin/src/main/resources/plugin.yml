@@ -2,5 +2,5 @@ name: XGlow
 main: ru.xezard.glow.GlowPlugin
 author: Xezard
 website: xezard.ru
-version: 1.0.6
+version: 1.0.7
 depend: [ProtocolLib]

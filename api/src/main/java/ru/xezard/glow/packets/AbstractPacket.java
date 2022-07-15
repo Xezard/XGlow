@@ -23,14 +23,17 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
+@Getter
+@FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 public abstract class AbstractPacket {
-    @Getter
-    protected PacketContainer handle;
+    PacketContainer handle;
 
     protected AbstractPacket(PacketContainer handle, PacketType type) {
         Preconditions.checkNotNull(handle, "packet handle cannot be null");
@@ -56,18 +59,6 @@ public abstract class AbstractPacket {
             } catch (InvocationTargetException e) {
                 throw new RuntimeException("Cannot send packet", e);
             }
-        }
-    }
-
-    public void broadcastPacket() {
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(getHandle());
-    }
-
-    public void receivePacket(Player sender) {
-        try {
-            ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, this.handle);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot receive packet: ", e);
         }
     }
 }

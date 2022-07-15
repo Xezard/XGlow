@@ -44,10 +44,6 @@ extends AbstractPacket {
         this.setEntityId(entityId);
     }
 
-    public WrapperPlayServerEntityMetadata(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-
     public int getEntityId() {
         return this.handle.getIntegers().read(0);
     }

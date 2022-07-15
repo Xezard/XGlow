@@ -24,13 +24,14 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
+import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v12;
 import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v13_16;
 import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v17_19;
 
 import java.util.List;
 import java.util.Optional;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WrapperPlayServerScoreboardTeam
 implements IWrapperPlayServerScoreboardTeam {
     IWrapperPlayServerScoreboardTeam wrapper;
@@ -44,6 +45,14 @@ implements IWrapperPlayServerScoreboardTeam {
             case 14:
             case 13:
                 this.wrapper = new WrapperPlayServerScoreboardTeam_v13_16();
+                break;
+
+            case 12:
+            case 11:
+            case 10:
+            case 9:
+            case 8:
+                this.wrapper = new WrapperPlayServerScoreboardTeam_v12();
                 break;
 
             case 19:
