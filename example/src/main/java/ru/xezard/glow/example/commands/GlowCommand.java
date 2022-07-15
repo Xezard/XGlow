@@ -22,16 +22,22 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import ru.xezard.glow.data.glow.Glow;
+import ru.xezard.glow.example.GlowExamplePlugin;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.bukkit.ChatColor.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GlowCommand
@@ -41,12 +47,20 @@ implements CommandExecutor {
             "'[]', '<>' - required and optional arguments",
             "",
             "> 'glow <help>' - show help page",
+            "> 'glow init' - init glow object and update glow color task",
             "> 'glow spawn' - spawns a test entity",
             "> 'glow enable' - adds glow to a test entity",
             "> 'glow disable' - disable glow on a test entity",
             "> 'glow destroy' - remove all holders and viewers from glow objet",
             "> 'glow addviewer [player name]' - add viewer for glow on a test entity",
             "> 'glow removeviewer [player name]' - add viewer for glow on a test entity"
+    );
+
+    static List<ChatColor> CHAT_COLORS = Arrays.asList(
+            BLACK, DARK_BLUE, DARK_GREEN,
+            DARK_AQUA, DARK_RED, DARK_PURPLE,
+            GOLD, GRAY, DARK_GRAY, BLUE, GREEN,
+            AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE
     );
 
     static String PREFIX = "[XGlowExample] ";
@@ -61,14 +75,20 @@ implements CommandExecutor {
             PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE = PREFIX + "Player with name '{target_name}' not found.",
             PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' can now see test entity glow.",
             PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' no longer sees test entity glow.",
-            GLOW_OBJECT_DESTROYED = PREFIX + "All viewers and holders removed from glow object!";
+            GLOW_OBJECT_DESTROYED = PREFIX + "Glow object destroyed!",
+            GLOW_OBJECT_INITIALIZED = PREFIX + "Glow object successfully initialized!",
+            GLOW_OBJECT_ALREADY_INITIALIZED = PREFIX + "Glow object already initialized!",
+            GLOW_OBJECT_IS_DESTROYED = PREFIX + "Glow object is not initialized!";
 
     @NonFinal Entity entity;
+    @NonFinal Glow glow;
+    @NonFinal BukkitTask task;
+    GlowExamplePlugin plugin;
 
-    Glow glow;
+    public GlowCommand(GlowExamplePlugin plugin) {
+        this.plugin = plugin;
 
-    public GlowCommand(Glow glow) {
-        this.glow = glow;
+        this.init();
     }
 
     @Override
@@ -87,6 +107,17 @@ implements CommandExecutor {
 
             case 1:
                 switch (arguments[0].toLowerCase()) {
+                    case "init":
+                        if (this.glow != null && this.task != null) {
+                            player.sendMessage(GLOW_OBJECT_ALREADY_INITIALIZED);
+                            return false;
+                        }
+
+                        this.init();
+
+                        player.sendMessage(GLOW_OBJECT_INITIALIZED);
+                        return true;
+
                     case "spawn":
                         if (this.entity != null) {
                             player.sendMessage(TEST_ENTITY_ALREADY_SPAWNED_MESSAGE);
@@ -99,6 +130,11 @@ implements CommandExecutor {
                         return true;
 
                     case "enable":
+                        if (this.glow == null) {
+                            player.sendMessage(GLOW_OBJECT_IS_DESTROYED);
+                            return true;
+                        }
+
                         if (this.entity == null) {
                             player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                             return true;
@@ -115,6 +151,11 @@ implements CommandExecutor {
                         return true;
 
                     case "disable":
+                        if (this.glow == null) {
+                            player.sendMessage(GLOW_OBJECT_IS_DESTROYED);
+                            return true;
+                        }
+
                         if (this.entity == null) {
                             player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                             return true;
@@ -131,7 +172,11 @@ implements CommandExecutor {
                         return true;
 
                     case "destroy":
+                        this.task.cancel();
+                        this.task = null;
+
                         this.glow.destroy();
+                        this.glow = null;
 
                         player.sendMessage(GLOW_OBJECT_DESTROYED);
                         return true;
@@ -140,6 +185,11 @@ implements CommandExecutor {
                 return false;
 
             case 2:
+                if (this.glow == null) {
+                    player.sendMessage(GLOW_OBJECT_IS_DESTROYED);
+                    return true;
+                }
+
                 if (this.entity == null) {
                     player.sendMessage(TEST_ENTITY_WAS_NOT_SPAWNED_MESSAGE);
                     return true;
@@ -177,5 +227,18 @@ implements CommandExecutor {
                 return false;
         }
         return false;
+    }
+
+    private void init() {
+        this.glow = Glow.builder()
+                .name("test")
+                .color(ChatColor.RED)
+                .build();
+
+        this.task = Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, () -> {
+            ChatColor pickedColor =
+                    CHAT_COLORS.get(ThreadLocalRandom.current().nextInt(CHAT_COLORS.size()));
+            this.glow.setColor(pickedColor);
+        }, 20L, 10L);
     }
 }
