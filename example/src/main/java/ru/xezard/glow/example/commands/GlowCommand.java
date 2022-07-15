@@ -22,7 +22,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +29,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import ru.xezard.glow.data.glow.Glow;
-import ru.xezard.glow.example.GlowExamplePlugin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +44,7 @@ implements CommandExecutor {
             "> 'glow spawn' - spawns a test entity",
             "> 'glow enable' - adds glow to a test entity",
             "> 'glow disable' - disable glow on a test entity",
+            "> 'glow destroy' - remove all holders and viewers from glow objet",
             "> 'glow addviewer [player name]' - add viewer for glow on a test entity",
             "> 'glow removeviewer [player name]' - add viewer for glow on a test entity"
     );
@@ -61,7 +60,8 @@ implements CommandExecutor {
             TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE = PREFIX + "The test entity is now not glowing for all viewers of the glow object.",
             PLAYER_WITH_THAT_NAME_NOT_FOUND_MESSAGE = PREFIX + "Player with name '{target_name}' not found.",
             PLAYER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' can now see test entity glow.",
-            PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' no longer sees test entity glow.";
+            PLAYER_NO_LONGER_SEES_TEST_ENTITY_GLOW_MESSAGE = PREFIX + "Player with name '{target_name}' no longer sees test entity glow.",
+            GLOW_OBJECT_DESTROYED = PREFIX + "All viewers and holders removed from glow object!";
 
     @NonFinal Entity entity;
 
@@ -128,6 +128,12 @@ implements CommandExecutor {
                         this.glow.removeHolders(this.entity);
 
                         player.sendMessage(TEST_ENTITY_NOT_GLOWING_NOW_MESSAGE);
+                        return true;
+
+                    case "destroy":
+                        this.glow.destroy();
+
+                        player.sendMessage(GLOW_OBJECT_DESTROYED);
                         return true;
                 }
 
