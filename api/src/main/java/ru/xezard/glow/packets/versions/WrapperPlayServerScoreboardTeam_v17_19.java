@@ -25,7 +25,7 @@ import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.Optional;
 
-public class WrapperPlayServerScoreboardTeam_v18_19
+public class WrapperPlayServerScoreboardTeam_v17_19
 extends AbstractWrapperPlayServerScoreboardTeam {
     @Override
     public Optional<WrappedChatComponent> getDisplayName() {
