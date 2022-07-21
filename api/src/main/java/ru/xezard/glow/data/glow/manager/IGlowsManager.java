@@ -35,6 +35,13 @@ public interface IGlowsManager {
                    .findFirst();
     }
 
+    default Optional<IGlow> getGlowByName(String name) {
+        return this.getGlows()
+                   .stream()
+                   .filter((glow) -> glow.getName().equals(name))
+                   .findFirst();
+    }
+
     void addGlow(IGlow glow);
 
     void removeGlow(IGlow glow);

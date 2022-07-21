@@ -240,5 +240,6 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+.flattened-pom.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,intellij+all,intellij+iml,intellij

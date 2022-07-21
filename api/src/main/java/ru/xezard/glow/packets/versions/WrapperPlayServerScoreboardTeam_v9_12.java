@@ -24,7 +24,7 @@ import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.Optional;
 
-public class WrapperPlayServerScoreboardTeam_v12
+public class WrapperPlayServerScoreboardTeam_v9_12
 extends AbstractWrapperPlayServerScoreboardTeam {
     @Override
     public Mode getMode() {

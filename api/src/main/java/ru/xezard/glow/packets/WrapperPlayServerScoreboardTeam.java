@@ -24,7 +24,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
-import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v12;
+import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v9_12;
 import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v13_16;
 import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v17_19;
 
@@ -51,8 +51,7 @@ implements IWrapperPlayServerScoreboardTeam {
             case 11:
             case 10:
             case 9:
-            case 8:
-                this.wrapper = new WrapperPlayServerScoreboardTeam_v12();
+                this.wrapper = new WrapperPlayServerScoreboardTeam_v9_12();
                 break;
 
             case 19:

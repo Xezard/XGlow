@@ -2,5 +2,6 @@ name: XGlow
 main: ru.xezard.glow.GlowPlugin
 author: Xezard
 website: xezard.ru
-version: 1.0.7
+version: ${project.parent.version}
+api-version: 1.13
 depend: [ProtocolLib]

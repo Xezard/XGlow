@@ -5,7 +5,7 @@
     <parent>
         <artifactId>XGlow</artifactId>
         <groupId>ru.xezard</groupId>
-        <version>1.0.7</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,12 +15,13 @@
     <build>
         <defaultGoal>clean package install</defaultGoal>
 
-        <finalName>XGlowAPI-${project.version}</finalName>
+        <finalName>XGlowAPI-${project.parent.version}</finalName>
 
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -28,4 +29,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.8.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
