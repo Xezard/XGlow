@@ -12,40 +12,35 @@ jobs:
           java-version: '17'
       - name: Run maven build
         run: mvn clean package
-      - name: Upload XGlowAPI
+      - name: Upload XGlow
         uses: actions/upload-artifact@v3
         with:
-          name: XGlowAPI
-          path: api/target/*.jar
+          name: XGlow
+          path: plugin/target/*.jar
       - name: Upload XGlowExample
         uses: actions/upload-artifact@v3
         with:
           name: XGlowExample
           path: example/target/*.jar
-      - name: Upload XGlow
-        uses: actions/upload-artifact@v3
-        with:
-          name: XGlow
-          path: plugin/target/XGlow.jar
   release:
     runs-on: ubuntu-22.04
     if: startsWith(github.ref, 'refs/tags/')
     needs: [build]
     steps:
-      - name: Download artifact (XGlowExample)
-        uses: actions/download-artifact@v3
-        with:
-          name: XGlowExample
-          path: example
       - name: Download artifact (XGlow)
         uses: actions/download-artifact@v3
         with:
           name: XGlow
           path: plugin
+      - name: Download artifact (XGlowExample)
+        uses: actions/download-artifact@v3
+        with:
+          name: XGlowExample
+          path: example
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            example/*.jar
             plugin/*.jar
+            example/*.jar
           draft: true
