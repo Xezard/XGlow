@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <build>
-        <defaultGoal>install</defaultGoal>
+        <defaultGoal>clean package install</defaultGoal>
 
         <finalName>XGlowExample-${project.parent.version}</finalName>
 
