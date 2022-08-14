@@ -79,14 +79,20 @@ extends AbstractWrapperPlayServerScoreboardTeam {
 
     @Override
     public Optional<ChatColor> getColor() {
-        return Optional.of(ChatColor.values()[this.handle.getIntegers().read(0)]);
+        int value = this.handle.getIntegers().read(0);
+
+        if (value == -1) {
+            return Optional.empty();
+        }
+
+        return Optional.of(ChatColor.values()[value]);
     }
 
     @Override
     public void setColor(ChatColor color) {
-        int value = color.ordinal() > 15 ? -1 : color.ordinal();
+        int value = color.ordinal() > 15 ? 0 : color.ordinal();
 
-        this.setPrefix(WrappedChatComponent.fromText(color + ""));
+        this.setPrefix(WrappedChatComponent.fromText(ChatColor.values()[value] + ""));
         this.handle.getIntegers().write(0, value);
     }
 

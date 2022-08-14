@@ -43,13 +43,7 @@ public abstract class AbstractPacket {
     }
 
     public void sendPacket(Iterable<Player> recipients) {
-        for (Player receiver : recipients) {
-            try {
-                ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException("Cannot send packet", e);
-            }
-        }
+        recipients.forEach(this::sendPacket);
     }
 
     public void sendPacket(Player... recipients) {

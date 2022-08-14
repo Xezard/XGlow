@@ -75,13 +75,13 @@ implements IGlowProcessor {
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
         team.setTeamName(teamName);
-        team.setDisplayName(WrappedChatComponent.fromText(teamName));
         team.setMode(mode);
 
         if (mode == AbstractWrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED) {
             return team.getPacket();
         }
 
+        team.setDisplayName(WrappedChatComponent.fromText(teamName));
         team.setColor(color);
         team.setNameTagVisibility(AbstractWrapperPlayServerScoreboardTeam.NameTagVisibility.ALWAYS);
 

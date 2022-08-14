@@ -79,9 +79,6 @@ extends AbstractGlow {
 
     @Override
     public void display(Player... viewers) {
-        List<AbstractPacket> packets = GlowProcessor.getInstance()
-                .createGlowPackets(this.holders, true);
-
         for (Player viewer : viewers) {
             if (this.viewers.contains(viewer)) {
                 continue;
@@ -89,6 +86,13 @@ extends AbstractGlow {
 
             this.render(viewer);
         }
+
+        if (this.holders.isEmpty()) {
+            return;
+        }
+
+        List<AbstractPacket> packets = GlowProcessor.getInstance()
+                .createGlowPackets(this.holders, true);
 
         packets.add(GlowProcessor.getInstance()
                 .createTeamPacket(this.holders, this.color, this.name,
@@ -108,9 +112,6 @@ extends AbstractGlow {
     }
 
     private void processView(boolean display, Player... viewers) {
-        List<AbstractPacket> packets = GlowProcessor.getInstance()
-                .createGlowPackets(this.holders, display);
-
         for (Player viewer : viewers) {
             if (display == this.viewers.contains(viewer)) {
                 continue;
@@ -123,6 +124,9 @@ extends AbstractGlow {
 
             this.viewers.remove(viewer);
         }
+
+        List<AbstractPacket> packets = this.holders.isEmpty() ? new ArrayList<> () :
+                GlowProcessor.getInstance().createGlowPackets(this.holders, display);
 
         packets.add(GlowProcessor.getInstance()
                 .createTeamPacket(this.holders, this.color, this.name,
