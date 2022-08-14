@@ -33,7 +33,7 @@ public interface IPlayerViewable {
     }
 
     default boolean sees(Player... possibleViewers) {
-        return Arrays.stream(possibleViewers).anyMatch(this.getViewers()::contains);
+        return Arrays.stream(possibleViewers).allMatch(this.getViewers()::contains);
     }
 
     default void display(Iterable<? extends Player> viewers) {
