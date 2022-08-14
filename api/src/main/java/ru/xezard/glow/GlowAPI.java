@@ -66,13 +66,8 @@ public class GlowAPI {
                 Entity entity = packet.getEntityModifier(event).read(0);
 
                 GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
-                    if (!glow.sees(event.getPlayer())) {
-                        return;
-                    }
-
-                    packet.getIntegers().write(0, entity.getEntityId());
                     packet.getWatchableCollectionModifier().write(0,
-                            GlowProcessor.getInstance().createDataWatcher(entity, true)
+                            GlowProcessor.getInstance().createDataWatcher(entity, glow.sees(event.getPlayer()))
                                     .getWatchableObjects());
 
                     event.setPacket(packet);
