@@ -195,11 +195,6 @@ implements CommandExecutor {
                     return true;
                 }
 
-                if (!this.glow.hasHolder(this.entity)) {
-                    player.sendMessage(TEST_ENTITY_ALREADY_NOT_GLOWING_MESSAGE);
-                    return true;
-                }
-
                 String targetName = arguments[1];
 
                 Player target = Bukkit.getPlayerExact(targetName);
