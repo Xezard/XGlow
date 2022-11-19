@@ -43,9 +43,6 @@ extends AbstractGlow {
 
     @Override
     public void addHolders(Entity... entities) {
-        Preconditions.checkArgument(this.holders.size() + entities.length <= 40,
-                "You cannot add more than 40 holders to one glow.");
-
         this.processHolder(true, entities);
     }
 

@@ -47,7 +47,15 @@ public abstract class AbstractPacket {
     }
 
     public void sendPacket(Player... recipients) {
+        if (recipients == null) {
+            return;
+        }
+
         for (Player receiver : recipients) {
+            if (receiver == null || !receiver.isOnline()) {
+                return;
+            }
+
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
             } catch (InvocationTargetException e) {

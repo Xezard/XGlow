@@ -76,9 +76,6 @@ implements IWrapperPlayServerScoreboardTeam {
 
     @Override
     public void setPlayers(List<String> value) {
-        Preconditions.checkArgument(value.size() <= 40,
-                "ScoreboardTeam cannot contain more than 40 entries.");
-
         this.handle.getSpecificModifier(Collection.class)
                 .write(0, value);
     }
