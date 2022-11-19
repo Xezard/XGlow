@@ -18,7 +18,6 @@
  */
 package ru.xezard.glow.data.glow;
 
-import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -55,7 +54,18 @@ extends AbstractGlow {
         List<AbstractPacket> packets = new ArrayList<> ();
 
         for (Entity entity : entities) {
-            if (add ? !this.holders.add(entity) : !this.holders.remove(entity)) {
+            boolean player = entity instanceof Player;
+            boolean changed;
+
+            String value = player ? entity.getName() : entity.getUniqueId().toString();
+
+            if (add && !this.holders.containsKey(value)) {
+                changed = this.holders.put(value, !player) == null;
+            } else {
+                changed = this.holders.remove(value) != null;
+            }
+
+            if (!changed) {
                 continue;
             }
 
