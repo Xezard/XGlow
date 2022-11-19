@@ -53,7 +53,7 @@ public abstract class AbstractPacket {
 
         for (Player receiver : recipients) {
             if (receiver == null || !receiver.isOnline()) {
-                return;
+                continue;
             }
 
             try {
