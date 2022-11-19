@@ -1,7 +1,7 @@
 name: XGlowExample
 main: ru.xezard.glow.example.GlowExamplePlugin
 author: Xezard
-website: xezard.ru
+website: xezard.me
 version: ${project.parent.version}
 api-version: 1.13
 depend: [XGlow]
