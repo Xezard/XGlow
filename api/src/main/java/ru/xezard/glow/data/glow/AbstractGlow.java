@@ -29,10 +29,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -82,6 +79,6 @@ implements IGlow {
 
             return entry.getValue() ? Bukkit.getEntity(UUID.fromString(key)) :
                                       Bukkit.getPlayer(key);
-        });
+        }).filter(Objects::nonNull);
     }
 }
