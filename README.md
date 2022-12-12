@@ -13,6 +13,8 @@
 [![Discord chat](https://img.shields.io/discord/775493797702139914?color=blue&label=discord)](https://discord.gg/JZ9uZ5aXwf)
 [![Wakatime](https://wakatime.com/badge/user/d6a049ff-6a4a-43a6-84ca-2a7d63329349/project/c02c20cd-6d72-414f-85e4-58dd3c69520d.svg)](https://wakatime.com/badge/user/d6a049ff-6a4a-43a6-84ca-2a7d63329349/project/c02c20cd-6d72-414f-85e4-58dd3c69520d)
 
+[ [devmc.org](https://devmc.org/ru/plugin/xglow) | [spigotmc.org](https://www.spigotmc.org/resources/xglow.85325/) | [papermc.io](https://forums.papermc.io/threads/xglow-simple-protocollib-based-api-to-create-glow-on-your-entities.416/) | [builtbybit.com](https://builtbybit.com/resources/xglow.18674/) | [spigotmc.ru](https://spigotmc.ru/resources/xglow.430/) | [modrinth.com](https://modrinth.com/mod/xglow) ]
+
 XGlow is a simple and easy-to-use API to create glow on entities.
 
 > **Important! This API depends on [ProtocolLib](https://github.com/dmulloy2/ProtocolLib)**
