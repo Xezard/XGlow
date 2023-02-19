@@ -28,8 +28,6 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-
 @Getter
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 public abstract class AbstractPacket {
@@ -58,7 +56,7 @@ public abstract class AbstractPacket {
 
             try {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, this.handle);
-            } catch (InvocationTargetException e) {
+            } catch (Exception e) {
                 throw new RuntimeException("Cannot send packet", e);
             }
         }

@@ -16,15 +16,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package ru.xezard.glow.packets;
+package ru.xezard.glow.packets.scoreboard;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import ru.xezard.glow.packets.AbstractPacket;
 
 import java.util.Arrays;
 import java.util.Collection;

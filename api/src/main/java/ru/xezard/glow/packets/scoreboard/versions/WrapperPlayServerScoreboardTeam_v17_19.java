@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.xezard.glow.packets.versions;
+package ru.xezard.glow.packets.scoreboard.versions;
 
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.ChatColor;
-import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
+import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.Optional;
 

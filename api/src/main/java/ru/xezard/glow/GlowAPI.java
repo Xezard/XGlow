@@ -24,6 +24,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
@@ -32,6 +33,9 @@ import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.data.glow.processor.GlowProcessor;
 import ru.xezard.glow.listeners.EntityDeathListener;
 import ru.xezard.glow.listeners.PlayerQuitListener;
+import ru.xezard.glow.packets.PacketsHelper;
+
+import java.util.List;
 
 public class GlowAPI {
     private final Plugin plugin;
@@ -66,9 +70,11 @@ public class GlowAPI {
                 Entity entity = packet.getEntityModifier(event).read(0);
 
                 GlowsManager.getInstance().getGlowByEntity(entity).ifPresent((glow) -> {
-                    packet.getWatchableCollectionModifier().write(0,
-                            GlowProcessor.getInstance().createDataWatcher(entity, glow.sees(event.getPlayer()))
-                                    .getWatchableObjects());
+                    List<WrappedWatchableObject> watchableObjects
+                            = GlowProcessor.getInstance().createDataWatcher(entity,
+                            glow.sees(event.getPlayer())).getWatchableObjects();
+                    packet.getDataValueCollectionModifier().write(0,
+                            PacketsHelper.watchableObjectsToDataValues(watchableObjects));
 
                     event.setPacket(packet);
                 });

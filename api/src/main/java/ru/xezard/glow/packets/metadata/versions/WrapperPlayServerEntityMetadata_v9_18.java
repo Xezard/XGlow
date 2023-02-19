@@ -16,54 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.xezard.glow.packets;
+package ru.xezard.glow.packets.metadata.versions;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
+import ru.xezard.glow.packets.metadata.AbstractWrapperPlayServerEntityMetadata;
 
 import java.util.List;
 
-public class WrapperPlayServerEntityMetadata
-extends AbstractPacket {
-    public static final PacketType TYPE = PacketType.Play.Server.ENTITY_METADATA;
-
-    public WrapperPlayServerEntityMetadata() {
-        super(new PacketContainer(TYPE), TYPE);
-
-        this.handle.getModifier().writeDefaults();
-    }
-
-    public WrapperPlayServerEntityMetadata(List<WrappedWatchableObject> metadata, int entityId) {
-        this();
-
-        this.setMetadata(metadata);
-        this.setEntityId(entityId);
-    }
-
-    public int getEntityId() {
-        return this.handle.getIntegers().read(0);
-    }
-
-    public void setEntityId(int value) {
-        this.handle.getIntegers().write(0, value);
-    }
-
-    public Entity getEntity(World world) {
-        return this.handle.getEntityModifier(world).read(0);
-    }
-
-    public Entity getEntity(PacketEvent event) {
-        return this.getEntity(event.getPlayer().getWorld());
-    }
-
+public class WrapperPlayServerEntityMetadata_v9_18
+extends AbstractWrapperPlayServerEntityMetadata {
+    @Override
     public List<WrappedWatchableObject> getMetadata() {
         return this.handle.getWatchableCollectionModifier().read(0);
     }
 
+    @Override
     public void setMetadata(List<WrappedWatchableObject> value) {
         this.handle.getWatchableCollectionModifier().write(0, value);
     }

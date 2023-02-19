@@ -16,7 +16,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package ru.xezard.glow.packets;
+package ru.xezard.glow.packets.scoreboard;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.utility.MinecraftVersion;
@@ -24,9 +24,10 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.ChatColor;
-import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v9_12;
-import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v13_16;
-import ru.xezard.glow.packets.versions.WrapperPlayServerScoreboardTeam_v17_19;
+import ru.xezard.glow.packets.AbstractPacket;
+import ru.xezard.glow.packets.scoreboard.versions.WrapperPlayServerScoreboardTeam_v13_16;
+import ru.xezard.glow.packets.scoreboard.versions.WrapperPlayServerScoreboardTeam_v17_19;
+import ru.xezard.glow.packets.scoreboard.versions.WrapperPlayServerScoreboardTeam_v9_12;
 
 import java.util.List;
 import java.util.Optional;
