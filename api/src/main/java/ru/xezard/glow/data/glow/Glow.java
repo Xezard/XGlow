@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 import ru.xezard.glow.data.glow.processor.GlowProcessor;
 import ru.xezard.glow.packets.AbstractPacket;
-import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
+import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.ArrayList;
 import java.util.List;

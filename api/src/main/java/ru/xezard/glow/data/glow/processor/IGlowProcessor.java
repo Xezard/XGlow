@@ -22,7 +22,7 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import ru.xezard.glow.packets.AbstractPacket;
-import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
+import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.List;
 import java.util.Map;

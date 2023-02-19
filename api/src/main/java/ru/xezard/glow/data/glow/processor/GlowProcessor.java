@@ -30,9 +30,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import ru.xezard.glow.data.glow.AbstractGlow;
 import ru.xezard.glow.packets.AbstractPacket;
-import ru.xezard.glow.packets.AbstractWrapperPlayServerScoreboardTeam;
-import ru.xezard.glow.packets.WrapperPlayServerEntityMetadata;
-import ru.xezard.glow.packets.WrapperPlayServerScoreboardTeam;
+import ru.xezard.glow.packets.metadata.WrapperPlayServerEntityMetadata;
+import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam;
+import ru.xezard.glow.packets.scoreboard.WrapperPlayServerScoreboardTeam;
 
 import java.util.List;
 import java.util.Map;
@@ -41,11 +41,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GlowProcessor
-implements IGlowProcessor {
+        implements IGlowProcessor {
     static WrappedDataWatcher.Serializer BYTE_SERIALIZER =
             WrappedDataWatcher.Registry.get(Byte.class);
 
-    @NonFinal static volatile GlowProcessor instance;
+    @NonFinal
+    static volatile GlowProcessor instance;
 
     public static GlowProcessor getInstance() {
         if (instance == null) {
@@ -91,7 +92,12 @@ implements IGlowProcessor {
     public AbstractPacket createGlowPacket(Entity entity, boolean glow) {
         List<WrappedWatchableObject> metadata = this.createDataWatcher(entity, glow).getWatchableObjects();
 
-        return new WrapperPlayServerEntityMetadata(metadata, entity.getEntityId());
+        WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata();
+
+        packet.setMetadata(metadata);
+        packet.setEntityId(entity.getEntityId());
+
+        return packet.getPacket();
     }
 
     @Override
