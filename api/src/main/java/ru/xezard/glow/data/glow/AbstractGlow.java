@@ -23,13 +23,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ru.xezard.glow.data.glow.manager.GlowsManager;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,10 +38,8 @@ import java.util.stream.Stream;
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 public abstract class AbstractGlow
 implements IGlow {
-    // <player name (false) or entity uuid (true)>
-    Map<String, Boolean> holders = new ConcurrentHashMap<> ();
-
     Set<Player> viewers = ConcurrentHashMap.newKeySet();
+    Set<Entity> holders = ConcurrentHashMap.newKeySet();
 
     @Getter
     @NonFinal ChatColor color;
@@ -73,12 +71,13 @@ implements IGlow {
         return Collections.unmodifiableSet(this.viewers);
     }
 
-    public static Stream<Entity> getHoldersStream(Map<String, Boolean> holders) {
-        return holders.entrySet().stream().map((entry) -> {
-            String key = entry.getKey();
+    public static Stream<Entity> getHoldersStream(Set<Entity> holders) {
+        return holders.stream();
+        // return holders.entrySet().stream().map((entry) -> {
+        //     String key = entry.getKey();
 
-            return entry.getValue() ? Bukkit.getEntity(UUID.fromString(key)) :
-                                      Bukkit.getPlayer(key);
-        }).filter(Objects::nonNull);
+        //     return entry.getValue() ? Bukkit.getEntity(UUID.fromString(key)) :
+        //                               Bukkit.getPlayer(key);
+        // }).filter(Objects::nonNull);
     }
 }

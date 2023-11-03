@@ -25,13 +25,13 @@ import ru.xezard.glow.packets.AbstractPacket;
 import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public interface IGlowProcessor {
-    AbstractPacket createTeamPacket(Map<String, Boolean> holders, ChatColor color, String teamName,
+    AbstractPacket createTeamPacket(Set<Entity> holders, ChatColor color, String teamName,
                                     AbstractWrapperPlayServerScoreboardTeam.Mode mode);
 
-    List<AbstractPacket> createGlowPackets(Map<String, Boolean> holders, boolean glow);
+    List<AbstractPacket> createGlowPackets(Set<Entity> holders, boolean glow);
 
     AbstractPacket createGlowPacket(Entity entity, boolean enableGlow);
 

@@ -54,22 +54,20 @@ extends AbstractGlow {
         List<AbstractPacket> packets = new ArrayList<> ();
 
         for (Entity entity : entities) {
-            boolean player = entity instanceof Player;
-            boolean changed;
-
-            String value = player ? entity.getName() : entity.getUniqueId().toString();
-
-            if (add && !this.holders.containsKey(value)) {
-                changed = this.holders.put(value, !player) == null;
+            boolean changed = false;
+            
+            if (add) {
+                if (!this.holders.contains(entity)) {
+                    changed = true;
+                    this.holders.add(entity);
+                }
             } else {
-                changed = this.holders.remove(value) != null;
+                changed = this.holders.remove(entity);
             }
 
-            if (!changed) {
-                continue;
+            if (changed) {
+                packets.add(GlowProcessor.getInstance().createGlowPacket(entity, add));
             }
-
-            packets.add(GlowProcessor.getInstance().createGlowPacket(entity, add));
         }
 
         if (packets.isEmpty()) {

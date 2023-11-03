@@ -21,11 +21,11 @@ package ru.xezard.glow.data.glow.processor;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import com.google.common.collect.Lists;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import ru.xezard.glow.data.glow.AbstractGlow;
@@ -35,7 +35,8 @@ import ru.xezard.glow.packets.scoreboard.AbstractWrapperPlayServerScoreboardTeam
 import ru.xezard.glow.packets.scoreboard.WrapperPlayServerScoreboardTeam;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -61,14 +62,14 @@ public class GlowProcessor
     }
 
     @Override
-    public List<AbstractPacket> createGlowPackets(Map<String, Boolean> holders, boolean glow) {
+    public List<AbstractPacket> createGlowPackets(Set<Entity> holders, boolean glow) {
         return AbstractGlow.getHoldersStream(holders)
                 .map((entity) -> this.createGlowPacket(entity, glow))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public AbstractPacket createTeamPacket(Map<String, Boolean> holders, ChatColor color, String teamName,
+    public AbstractPacket createTeamPacket(Set<Entity> holders, ChatColor color, String teamName,
                                            AbstractWrapperPlayServerScoreboardTeam.Mode mode) {
         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 
@@ -83,7 +84,7 @@ public class GlowProcessor
         team.setColor(color);
         team.setNameTagVisibility(AbstractWrapperPlayServerScoreboardTeam.NameTagVisibility.ALWAYS);
 
-        team.setPlayers(Lists.newArrayList(holders.keySet()));
+        team.setPlayers(holders.stream().map(Entity::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
 
         return team.getPacket();
     }
