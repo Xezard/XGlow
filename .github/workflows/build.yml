@@ -28,12 +28,12 @@ jobs:
     needs: [build]
     steps:
       - name: Download artifact (XGlow)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: XGlow
           path: plugin
       - name: Download artifact (XGlowExample)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: XGlowExample
           path: example
